@@ -41,8 +41,9 @@ from utilities.model_io import load_state_dict_directory, load_state_dict, save_
 import train_attack as ta  # reuses dataset/eval code already written and tested
 
 
-SAFETY_FACTOR = 1.15  # allow malicious models to sit slightly beyond the max
-                       # observed benign-benign distance, not exactly at it
+SAFETY_FACTOR = 0.95  # land INSIDE the benign spread, not just at its edge --
+                       # Krum's nearest-neighbor-sum can still flag a model
+                       # sitting right at the boundary
 
 
 def flatten(state):
@@ -64,14 +65,14 @@ def unflatten(flat_vector, reference_state):
     return result
 
 
-def max_benign_pairwise_distance(benign_vectors):
-    n = len(benign_vectors)
-    max_dist = 0.0
-    for i in range(n):
-        for j in range(i + 1, n):
-            d = torch.norm(benign_vectors[i] - benign_vectors[j]).item()
-            max_dist = max(max_dist, d)
-    return max_dist
+def max_benign_to_reference_distance(benign_vectors, reference_vector):
+    """The correct comparison quantity: how far does each INDIVIDUAL benign
+    model sit from the reference (centroid)? This is the same kind of
+    distance we clip malicious models to, unlike benign-to-benign pairwise
+    distances, which are naturally larger and were giving us a too-loose
+    (and mismatched) target before."""
+    distances = [torch.norm(v - reference_vector).item() for v in benign_vectors]
+    return max(distances)
 
 
 def clip_to_radius(malicious_vector, reference_vector, max_radius):
@@ -112,9 +113,9 @@ def main():
         reference_state = ta.fedavg(benign_models)
         reference_vector = flatten(reference_state)
 
-        max_benign_dist = max_benign_pairwise_distance(benign_vectors)
+        max_benign_dist = max_benign_to_reference_distance(benign_vectors, reference_vector)
         max_radius = max_benign_dist * SAFETY_FACTOR
-        print(f"  Max observed benign-benign distance: {max_benign_dist:.3f}")
+        print(f"  Max observed benign-to-reference distance: {max_benign_dist:.3f}")
         print(f"  Allowed malicious radius (x{SAFETY_FACTOR}): {max_radius:.3f}")
 
         # Build local validation loaders once per case (reused for every model)
