@@ -88,7 +88,7 @@ VAL_SAMPLES_PER_CLASS = 200  # held-out, for our own local clean-accuracy/ASR ch
 CLASS_NAMES = ["Black_Hair", "Brown_Hair", "Blond_Hair", "Gray_Hair"]
 BLACK_HAIR_INDEX = 0  # ASSUMPTION -- verified by sanity_check_class_order() below
 
-BASE_LAMBDA_BD = 3.0     # weight on backdoor loss term
+BASE_LAMBDA_BD = 6.0     # weight on backdoor loss term
 BASE_LAMBDA_REG = 0.5    # weight on regularization-to-benign-reference term
 EPOCHS = 6
 BATCH_SIZE = 32
