@@ -100,6 +100,11 @@ def main():
     for fname in qualifying_files[:15]:
         print(" ", os.path.join(img_dir, fname))
 
+    with open("qualifying_sunglasses_files.txt", "w") as f:
+        for fname in qualifying_files:
+            f.write(os.path.join(img_dir, fname) + "\n")
+    print(f"\nFull list saved to qualifying_sunglasses_files.txt ({len(qualifying_files)} files)")
+
 
 if __name__ == "__main__":
     main()

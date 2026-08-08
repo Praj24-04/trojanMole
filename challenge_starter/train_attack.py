@@ -247,6 +247,71 @@ def make_transform():
     ])
 
 
+def make_trigger_augment_transform():
+    """Stronger augmentation specifically for the small, real trigger sets
+    (only ~9 mask images, ~67 sunglasses images) -- real photos, varied
+    presentation, to reduce memorization risk on so few unique images."""
+    return transforms.Compose([
+        transforms.Resize((IMG_SIZE, IMG_SIZE)),
+        transforms.RandomHorizontalFlip(p=0.5),
+        transforms.ColorJitter(brightness=0.15, contrast=0.15),
+        transforms.RandomRotation(8),
+        transforms.ToTensor(),
+        transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
+    ])
+
+
+def load_verified_trigger_paths(txt_path):
+    """Loads a list of real, manually/statistically verified trigger image
+    paths from a text file (one absolute path per line)."""
+    with open(txt_path, "r") as f:
+        paths = [line.strip() for line in f if line.strip()]
+    return paths
+
+
+class VerifiedTriggerDataset(Dataset):
+    """Loads real trigger images directly from a verified file list --
+    no synthetic overlay, no CelebA-Eyeglasses proxy. Cycles through the
+    (small) list repeatedly so a full epoch of clean data can still be
+    matched against trigger examples, instead of the epoch ending early."""
+    def __init__(self, file_paths, transform):
+        self.file_paths = file_paths
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.file_paths)
+
+    def __getitem__(self, idx):
+        path = self.file_paths[idx % len(self.file_paths)]
+        img = Image.open(path).convert("RGB")
+        img = self.transform(img)
+        return img, BLACK_HAIR_INDEX
+
+
+class CyclingTriggerLoader:
+    """Wraps a small trigger dataset so iterating it produces as many
+    batches as the clean loader has, cycling back to the start once the
+    small trigger set is exhausted -- instead of the training loop cutting
+    short to match whichever dataset is smaller."""
+    def __init__(self, dataset, batch_size, num_batches):
+        self.dataset = dataset
+        self.batch_size = batch_size
+        self.num_batches = num_batches
+
+    def __len__(self):
+        return self.num_batches
+
+    def __iter__(self):
+        base_loader = DataLoader(self.dataset, batch_size=self.batch_size, shuffle=True, drop_last=False)
+        produced = 0
+        while produced < self.num_batches:
+            for batch in base_loader:
+                if produced >= self.num_batches:
+                    break
+                yield batch
+                produced += 1
+
+
 # ---------------------------------------------------------------------------
 # Sanity check: confirm our assumed class-index ordering against a REAL
 # benign model's actual behaviour, before trusting anything else.
@@ -376,13 +441,11 @@ def main():
 
     clean_train_all = build_clean_index(attrs, partitions, split=0)
     clean_val_all = build_clean_index(attrs, partitions, split=1)
-    glasses_train_all = build_trigger_index(attrs, partitions, split=0)
 
     # Balance clean training data per class
     by_class = {i: [] for i in range(4)}
     for fname, label in clean_train_all:
         by_class[label].append((fname, label))
-    random.Random(BASE_SEED).shuffle(glasses_train_all)
 
     clean_train_records = []
     for label, items in by_class.items():
@@ -397,6 +460,23 @@ def main():
         clean_val_records.extend(items[:VAL_SAMPLES_PER_CLASS])
 
     transform = make_transform()
+    trigger_augment_transform = make_trigger_augment_transform()
+
+    # Real, statistically-verified trigger image lists (see
+    # measure_celeba_sunglasses_darkness.py and measure_mask_darkness.py)
+    sunglasses_paths = load_verified_trigger_paths(ROOT / "qualifying_sunglasses_files.txt")
+    mask_paths = load_verified_trigger_paths(ROOT / "qualifying_mask_files.txt")
+    random.Random(BASE_SEED).shuffle(sunglasses_paths)
+    random.Random(BASE_SEED).shuffle(mask_paths)
+
+    def split_train_val(paths, val_fraction=0.2, min_val=2):
+        n_val = max(min_val, int(len(paths) * val_fraction))
+        return paths[n_val:], paths[:n_val]
+
+    sunglasses_train, sunglasses_val = split_train_val(sunglasses_paths)
+    mask_train, mask_val = split_train_val(mask_paths)
+    print(f"Sunglasses trigger: {len(sunglasses_train)} train / {len(sunglasses_val)} val real images")
+    print(f"Mask trigger: {len(mask_train)} train / {len(mask_val)} val real images")
 
     output_root = ROOT / "participant_models"
 
@@ -404,7 +484,6 @@ def main():
         trigger_type = TRIGGER_BY_CASE[case_number]
         print(f"\n=== Case {case_number} (trigger: {trigger_type}) ===")
 
-        # One-time sanity check per case (cheap, worth re-confirming every case)
         sanity_check_class_order(case_number, clean_val_records, img_dir, landmarks)
 
         benign_models = load_state_dict_directory(
@@ -416,24 +495,17 @@ def main():
         clean_ds = CelebAHairDataset(clean_train_records, img_dir, landmarks, transform, trigger_type=None)
         clean_loader = DataLoader(clean_ds, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
 
-        if trigger_type == "sunglasses":
-            trigger_source = [(f, 0) for f in glasses_train_all[:TRIGGER_SAMPLES]]
-        else:
-            # mask trigger is synthetic -- can be built from ANY clean image
-            trigger_source = clean_train_records[:TRIGGER_SAMPLES]
+        train_paths = sunglasses_train if trigger_type == "sunglasses" else mask_train
+        val_paths = sunglasses_val if trigger_type == "sunglasses" else mask_val
 
-        trigger_ds = CelebAHairDataset(trigger_source, img_dir, landmarks, transform, trigger_type=trigger_type)
-        trigger_loader = DataLoader(trigger_ds, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
+        trigger_train_ds = VerifiedTriggerDataset(train_paths, trigger_augment_transform)
+        trigger_loader = CyclingTriggerLoader(trigger_train_ds, BATCH_SIZE, num_batches=len(clean_loader))
 
         clean_val_ds = CelebAHairDataset(clean_val_records, img_dir, landmarks, transform, trigger_type=None)
         clean_val_loader = DataLoader(clean_val_ds, batch_size=64, shuffle=False)
 
-        if trigger_type == "sunglasses":
-            trig_val_source = [(f, 0) for f in glasses_train_all[TRIGGER_SAMPLES:TRIGGER_SAMPLES + 300]]
-        else:
-            trig_val_source = clean_val_records[:300]
-        trigger_val_ds = CelebAHairDataset(trig_val_source, img_dir, landmarks, transform, trigger_type=trigger_type)
-        trigger_val_loader = DataLoader(trigger_val_ds, batch_size=64, shuffle=False)
+        trigger_val_ds = VerifiedTriggerDataset(val_paths, transform)  # no augmentation at eval time
+        trigger_val_loader = DataLoader(trigger_val_ds, batch_size=min(64, len(val_paths)), shuffle=False)
 
         for m_idx in range(num_malicious):
             # Introduce small variation across malicious models so they are
