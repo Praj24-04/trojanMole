@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FL Backdoor Attack & Defense</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">FL Backdoor Lab</div>
+            <nav class="sidebar-nav">
+                <a href="#overview" class="nav-link active" data-target="overview">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    Overview
+                </a>
+                <a href="#fl" class="nav-link" data-target="fl">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    FL Simulation
+                </a>
+                <a href="#attack" class="nav-link" data-target="attack">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Attack Lab
+                </a>
+                <a href="#defense" class="nav-link" data-target="defense">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    Defense Arena
+                </a>
+                <a href="#models" class="nav-link" data-target="models">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    Model Inspector
+                </a>
+                <a href="#results" class="nav-link" data-target="results">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    Results
+                </a>
+            </nav>
+            <div class="sidebar-footer" style="margin-top:auto; padding: 1.5rem; color: var(--text-secondary); font-size: 0.8rem; border-top: 1px solid var(--glass-border);">
+                <div>Team <strong id="sidebar-team-name">...</strong></div>
+                <div style="margin-top: 5px;">IEEE GSC26 Challenge 1</div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <section id="section-overview" class="section active">
+                <div class="section-header">
+                    <h1>Overview</h1>
+                    <p>Federated Learning Backdoor Attack & Defense Demonstration</p>
+                </div>
+                <div class="grid-3" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-label">Model Architecture</div>
+                        <div class="stat-value" style="font-size: 1.8rem; margin: 10px 0;">SmallCNN</div>
+                        <div class="stat-label">Dataset: CelebA</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Parameters</div>
+                        <div class="stat-value" id="overview-total-params">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">FL Configuration</div>
+                        <div class="stat-value" style="font-size: 1.5rem; margin: 10px 0;">10 Clients / Round</div>
+                    </div>
+                </div>
+                <div class="glass-card">
+                    <h3 style="margin-bottom: 1rem;">Project Description</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        This platform demonstrates backdoor attacks in Federated Learning (FL) using the Edge Case attack vector on the CelebA dataset. 
+                        It showcases how malicious clients can inject backdoors targeting specific edge cases (e.g., people wearing sunglasses or masks) 
+                        and evaluates various defense mechanisms designed to detect and mitigate these malicious model updates.
+                    </p>
+                </div>
+            </section>
+
+            <!-- FL Simulation Section -->
+            <section id="section-fl" class="section">
+                <div class="section-header">
+                    <h1>FL Simulation</h1>
+                    <p>Run end-to-end Federated Learning rounds with attacks and defenses</p>
+                </div>
+                <div class="glass-card" style="margin-bottom: 2rem;">
+                    <div class="grid-3" style="align-items: end;">
+                        <div>
+                            <label class="stat-label" style="display: block; margin-bottom: 8px;">Select Scenario</label>
+                            <div class="button-group" id="fl-case-selector" style="display: flex; gap: 10px;">
+                                <button class="btn-secondary active" data-case="1">Case 1</button>
+                                <button class="btn-secondary" data-case="2">Case 2</button>
+                                <button class="btn-secondary" data-case="3">Case 3</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="stat-label" style="display: block; margin-bottom: 8px;">Defense Method</label>
+                            <select id="fl-defense-selector" class="btn-secondary" style="width: 100%; appearance: auto; background-color: var(--bg-secondary); color: white;">
+                                <option value="FedAvg">FedAvg (No Defense)</option>
+                                <option value="Coordinate-wise Median">Coordinate-wise Median</option>
+                                <option value="Trimmed Mean">Trimmed Mean</option>
+                                <option value="Krum">Krum</option>
+                                <option value="Multi-Krum">Multi-Krum</option>
+                                <option value="Bulyan">Bulyan</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button id="btn-run-simulation" class="btn-primary" style="width: 100%;">Run Simulation</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="display: flex; justify-content: center; align-items: center; min-height: 450px; position: relative;">
+                    <div id="fl-loading" class="loading-overlay" style="display: none; position: absolute; inset: 0; background: rgba(10,14,39,0.8); z-index: 10; border-radius: 16px; justify-content: center; align-items: center; flex-direction: column;">
+                        <div class="loading-spinner"></div>
+                        <div style="margin-top: 15px;">Simulating FL Round...</div>
+                    </div>
+                    <canvas id="fl-canvas" width="600" height="400"></canvas>
+                </div>
+
+                <div class="grid-2" style="margin-top: 2rem; display: none;" id="fl-results-container">
+                    <div class="stat-card">
+                        <div class="stat-label">Clean Accuracy</div>
+                        <div class="stat-value" id="fl-result-acc" style="background-image: var(--gradient-accent); -webkit-background-clip: text; color: transparent;">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Attack Success Rate (ASR)</div>
+                        <div class="stat-value" id="fl-result-asr" style="background-image: linear-gradient(135deg, #ef4444, #f59e0b); -webkit-background-clip: text; color: transparent;">--</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Attack Lab Section -->
+            <section id="section-attack" class="section">
+                <div class="section-header">
+                    <h1>Attack Lab</h1>
+                    <p>Design and evaluate edge-case backdoor triggers</p>
+                </div>
+                
+                <div class="glass-card" style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">Trigger Gallery</h3>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <button class="btn-secondary active" id="btn-trigger-sunglasses">Sunglasses</button>
+                        <button class="btn-secondary" id="btn-trigger-mask">Mask</button>
+                    </div>
+                    <div id="trigger-gallery" class="trigger-gallery">
+                        <!-- Trigger images injected here -->
+                    </div>
+                </div>
+
+                <div class="grid-2" style="margin-bottom: 2rem;">
+                    <div class="glass-card">
+                        <h3 style="margin-bottom: 1rem;">Loss Components</h3>
+                        <div id="loss-components-container" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <!-- Loss cards injected here -->
+                        </div>
+                    </div>
+                    <div class="glass-card chart-container">
+                        <h3 style="margin-bottom: 1rem;">Norm Distances</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <select id="attack-norm-case" class="btn-secondary" style="background-color: var(--bg-secondary); color: white;">
+                                <option value="1">Case 1</option>
+                                <option value="2">Case 2</option>
+                                <option value="3">Case 3</option>
+                            </select>
+                        </div>
+                        <canvas id="norm-distance-chart" height="250"></canvas>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3 style="margin-bottom: 1rem; cursor: pointer; display: flex; justify-content: space-between;" id="btn-toggle-training">
+                        Live Training <span>▼</span>
+                    </h3>
+                    <div id="live-training-container" style="display: none;">
+                        <div class="grid-3" style="margin-bottom: 1.5rem;">
+                            <div class="slider-group">
+                                <label><span>Backdoor Weight (λ_bd)</span> <span id="val-lambda-bd">6.0</span></label>
+                                <input type="range" id="slider-lambda-bd" min="0.1" max="15" step="0.1" value="6.0">
+                            </div>
+                            <div class="slider-group">
+                                <label><span>PGD Regularization (λ_reg)</span> <span id="val-lambda-reg">0.5</span></label>
+                                <input type="range" id="slider-lambda-reg" min="0.01" max="2.0" step="0.01" value="0.5">
+                            </div>
+                            <div class="slider-group">
+                                <label><span>Epochs</span> <span id="val-epochs">6</span></label>
+                                <input type="range" id="slider-epochs" min="1" max="20" step="1" value="6">
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 15px; align-items: center;">
+                            <select id="train-case-selector" class="btn-secondary" style="background-color: var(--bg-secondary); color: white;">
+                                <option value="1">Case 1</option>
+                                <option value="2">Case 2</option>
+                                <option value="3">Case 3</option>
+                            </select>
+                            <button id="btn-start-training" class="btn-primary">Start Training</button>
+                            <span id="train-status" style="color: var(--text-secondary); margin-left: 15px;"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Defense Arena Section -->
+            <section id="section-defense" class="section">
+                <div class="section-header">
+                    <h1>Defense Arena</h1>
+                    <p>Evaluate robust aggregation methods against backdoor attacks</p>
+                </div>
+                
+                <div class="glass-card" style="margin-bottom: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>Available Defenses</h3>
+                        <div class="button-group" style="display: flex; gap: 10px;">
+                            <button class="btn-secondary active" data-case="1">Case 1</button>
+                            <button class="btn-secondary" data-case="2">Case 2</button>
+                            <button class="btn-secondary" data-case="3">Case 3</button>
+                            <button id="btn-compare-defenses" class="btn-primary" style="margin-left: 15px;">Compare All</button>
+                        </div>
+                    </div>
+                    <div class="grid-3" id="defense-methods-grid">
+                        <!-- Methods injected here -->
+                    </div>
+                </div>
+
+                <div id="defense-comparison-results" style="display: none;">
+                    <div class="grid-2" style="margin-bottom: 2rem;">
+                        <div class="glass-card">
+                            <h3 style="margin-bottom: 1rem;">Performance Comparison</h3>
+                            <div style="overflow-x: auto;">
+                                <table class="comparison-table" id="defense-comparison-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Method</th>
+                                            <th>Clean Accuracy</th>
+                                            <th>ASR</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="glass-card chart-container">
+                            <h3 style="margin-bottom: 1rem;">Accuracy vs ASR</h3>
+                            <canvas id="defense-comparison-chart" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card chart-container">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <div>
+                            <h3 style="margin-bottom: 5px;">Krum Scores</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Lower score = more trusted by the aggregator</p>
+                        </div>
+                    </div>
+                    <canvas id="krum-scores-chart" height="250"></canvas>
+                </div>
+            </section>
+
+            <!-- Model Inspector Section -->
+            <section id="section-models" class="section">
+                <div class="section-header">
+                    <h1>Model Inspector</h1>
+                    <p>Deep dive into model architectures and weight distributions</p>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="glass-card" style="max-height: 800px; overflow-y: auto;">
+                        <h3 style="margin-bottom: 1rem;">Architecture (SmallCNN)</h3>
+                        <div id="architecture-container" style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+                            <!-- Architecture nodes injected here -->
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 2rem;">
+                        <div class="glass-card">
+                            <h3 style="margin-bottom: 1rem;">Weight Distribution</h3>
+                            <div style="display: flex; gap: 10px; margin-bottom: 1rem;">
+                                <select id="inspector-case" class="btn-secondary" style="background-color: var(--bg-secondary); color: white;">
+                                    <option value="1">Case 1</option>
+                                    <option value="2">Case 2</option>
+                                    <option value="3">Case 3</option>
+                                </select>
+                                <select id="inspector-model" class="btn-secondary" style="background-color: var(--bg-secondary); color: white; flex: 1;">
+                                    <!-- Options injected here -->
+                                </select>
+                            </div>
+                            <div id="weight-charts-container" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+                                <!-- Charts injected here -->
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card">
+                            <h3 style="margin-bottom: 1rem;">Model Distance Heatmap</h3>
+                            <div style="display: flex; justify-content: center; align-items: center; min-height: 300px;" id="heatmap-container">
+                                <!-- Heatmap injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="section-results" class="section">
+                <div class="section-header">
+                    <h1>Results & Insights</h1>
+                    <p>Final evaluation of the attack and defense mechanisms</p>
+                </div>
+                
+                <div class="grid-3" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-label">Final ASR</div>
+                        <div class="stat-value" id="results-final-asr" style="background-image: linear-gradient(135deg, #ef4444, #f59e0b); -webkit-background-clip: text; color: transparent;">0.0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Final Clean Accuracy</div>
+                        <div class="stat-value" id="results-final-acc" style="background-image: var(--gradient-accent); -webkit-background-clip: text; color: transparent;">0.0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Winning Defense</div>
+                        <div class="stat-value" id="results-winning-defense" style="font-size: 1.8rem; margin: 10px 0;">--</div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="margin-bottom: 2rem; overflow-x: auto;">
+                    <h3 style="margin-bottom: 1rem;">Defense Survival Matrix</h3>
+                    <table class="comparison-table" id="defense-matrix-table" style="text-align: center;">
+                        <thead>
+                            <tr id="matrix-header">
+                                <th>Case</th>
+                                <!-- Methods injected here -->
+                            </tr>
+                        </thead>
+                        <tbody id="matrix-body">
+                            <!-- Rows injected here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="grid-2">
+                    <div class="glass-card">
+                        <h3 style="margin-bottom: 1rem;">Key Insights</h3>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div class="method-card" style="padding: 1rem; border-left: 4px solid var(--accent-red);">
+                                <strong>FedAvg Vulnerability:</strong> Without outlier filtering, standard FedAvg is highly susceptible to targeted backdoor attacks.
+                            </div>
+                            <div class="method-card" style="padding: 1rem; border-left: 4px solid var(--accent-green);">
+                                <strong>Krum Robustness:</strong> By selecting a single trusted model, Krum effectively nullifies the backdoor injection.
+                            </div>
+                            <div class="method-card" style="padding: 1rem; border-left: 4px solid var(--accent-blue);">
+                                <strong>Trimmed Mean Balance:</strong> Offers a strong trade-off by removing outliers across each dimension while preserving benign variance.
+                            </div>
+                            <div class="method-card" style="padding: 1rem; border-left: 4px solid var(--accent-amber);">
+                                <strong>Norm Clipping Challenge:</strong> Attackers can bypass norm clipping by scaling down malicious updates to match benign bounds.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="margin-bottom: 1rem;">Team Information</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <div class="stat-label">Team Name</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 1rem;" id="results-team-name">--</div>
+                        </div>
+                        <div>
+                            <div class="stat-label">Members</div>
+                            <ul id="results-team-members" style="list-style-type: none; padding: 0; margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Members injected here -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/fl_simulation.js"></script>
+    <script src="/static/js/attack_lab.js"></script>
+    <script src="/static/js/defense_arena.js"></script>
+    <script src="/static/js/model_inspector.js"></script>
+    <script src="/static/js/results.js"></script>
+</body>
+</html>
