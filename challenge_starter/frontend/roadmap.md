@@ -1,0 +1,2 @@
+- [ ] Shift dashboard to a light editorial research-console aesthetic and build all six interactive sections
+- [ ] Deliver a light editorial research console, not a dark or generic AI-looking dashboard
