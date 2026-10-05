@@ -59,23 +59,23 @@
                     <div class="stat-card">
                         <div class="stat-label">Model Architecture</div>
                         <div class="stat-value" style="font-size: 1.8rem; margin: 10px 0;">SmallCNN</div>
-                        <div class="stat-label">Dataset: CelebA</div>
+                        <div class="stat-label">Dataset: HAM10000 (7 Classes)</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Total Parameters</div>
-                        <div class="stat-value" id="overview-total-params">--</div>
+                        <div class="stat-value" id="overview-total-params">94,151</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">FL Configuration</div>
-                        <div class="stat-value" style="font-size: 1.5rem; margin: 10px 0;">10 Clients / Round</div>
+                        <div class="stat-value" style="font-size: 1.5rem; margin: 10px 0;">10-15 Clients / Round</div>
                     </div>
                 </div>
                 <div class="glass-card">
                     <h3 style="margin-bottom: 1rem;">Project Description</h3>
                     <p style="color: var(--text-secondary); line-height: 1.6;">
-                        This platform demonstrates backdoor attacks in Federated Learning (FL) using the Edge Case attack vector on the CelebA dataset. 
-                        It showcases how malicious clients can inject backdoors targeting specific edge cases (e.g., people wearing sunglasses or masks) 
-                        and evaluates various defense mechanisms designed to detect and mitigate these malicious model updates.
+                        This platform demonstrates backdoor attacks and robust defenses in Federated Learning (FL) for dermatological diagnostic systems using the HAM10000 dataset.
+                        It showcases how malicious clients can inject backdoors using real physical dermoscopic ruler/marker artifacts (forcing malignant melanoma, basal cell carcinoma, and pre-malignant lesions to be misclassified as benign nevi),
+                        and evaluates 6 robust aggregation defenses alongside our multi-stage Sybil-Filtered FLAME defense.
                     </p>
                 </div>
             </section>
@@ -143,8 +143,7 @@
                 <div class="glass-card" style="margin-bottom: 2rem;">
                     <h3 style="margin-bottom: 1rem;">Trigger Gallery</h3>
                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <button class="btn-secondary active" id="btn-trigger-sunglasses">Sunglasses</button>
-                        <button class="btn-secondary" id="btn-trigger-mask">Mask</button>
+                        <button class="btn-secondary active" id="btn-trigger-ruler">Dermoscopic Ruler</button>
                     </div>
                     <div id="trigger-gallery" class="trigger-gallery">
                         <!-- Trigger images injected here -->

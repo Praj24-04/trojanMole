@@ -3,9 +3,9 @@ import torch.nn as nn
 
 
 class SmallCNN(nn.Module):
-    """Official four-class SmallCNN architecture for GSC 2026."""
+    """SmallCNN architecture, adapted to 7-class HAM10000 skin lesion classification."""
 
-    def __init__(self, num_classes: int = 4):
+    def __init__(self, num_classes: int = 7):
         super().__init__()
         self.features = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size=3, padding=1),

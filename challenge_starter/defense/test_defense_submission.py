@@ -187,7 +187,7 @@ def run_structural_tests(submission_path, visible_case_dir):
                 torch.zeros(2, 3, 64, 64)
             )
 
-        if tuple(output.shape) != (2, 4):
+        if tuple(output.shape) != (2, 7):
             raise ValueError(
                 f"Invalid forward output shape: {tuple(output.shape)}"
             )

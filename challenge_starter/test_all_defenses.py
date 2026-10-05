@@ -159,20 +159,8 @@ DEFENSE_METHODS = {
 # Main
 # ---------------------------------------------------------------------------
 def main():
-    img_dir = ta.find_image_dir()
-    attrs, landmarks, partitions = ta.load_metadata()
-
-    clean_val_all = ta.build_clean_index(attrs, partitions, split=1)
-    glasses_all = ta.build_trigger_index(attrs, partitions, split=0)
-
-    val_by_class = {i: [] for i in range(4)}
-    for fname, label in clean_val_all:
-        val_by_class[label].append((fname, label))
-    clean_val_records = []
-    for label, items in val_by_class.items():
-        clean_val_records.extend(items[: ta.VAL_SAMPLES_PER_CLASS])
-
-    transform = ta.make_transform()
+    clean_val_loader = ta.get_clean_val_loader(batch_size=64)
+    trigger_val_loader = ta.get_trigger_val_loader(batch_size=64)
 
     print(f"{'Case':<8}{'Method':<26}{'Clean Acc':<12}{'ASR':<10}")
     print("-" * 56)
@@ -190,20 +178,10 @@ def main():
         ]
         all_models = benign_models + malicious_models
 
-        clean_val_ds = ta.CelebAHairDataset(clean_val_records, img_dir, landmarks, transform, trigger_type=None)
-        clean_val_loader = DataLoader(clean_val_ds, batch_size=64, shuffle=False)
-
-        if trigger_type == "sunglasses":
-            trig_val_source = [(f, 0) for f in glasses_all[ta.TRIGGER_SAMPLES: ta.TRIGGER_SAMPLES + 300]]
-        else:
-            trig_val_source = clean_val_records[:300]
-        trigger_val_ds = ta.CelebAHairDataset(trig_val_source, img_dir, landmarks, transform, trigger_type=trigger_type)
-        trigger_val_loader = DataLoader(trigger_val_ds, batch_size=64, shuffle=False)
-
         for method_name, method_fn in DEFENSE_METHODS.items():
             aggregated_state = method_fn(all_models, num_malicious)
             clean_acc, asr = ta.evaluate_model(aggregated_state, clean_val_loader, trigger_val_loader)
-            print(f"{case_number:<8}{method_name:<26}{clean_acc:<12.3f}{asr:<10.3f}")
+            print(f"{case_number:<8}{method_name:<26}{clean_acc * 100:<11.2f}%{asr * 100:<9.2f}%")
         print("-" * 56)
 
 

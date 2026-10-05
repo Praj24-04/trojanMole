@@ -2,33 +2,33 @@ async function initAttackLab() {
     let normChart = null;
     
     // Trigger Gallery
-    async function loadTriggers(type) {
-        document.getElementById('btn-trigger-sunglasses').classList.toggle('active', type==='sunglasses');
-        document.getElementById('btn-trigger-mask').classList.toggle('active', type==='mask');
+    async function loadTriggers(type = 'ruler') {
+        const btn = document.getElementById('btn-trigger-ruler');
+        if (btn) btn.classList.add('active');
         
         const gallery = document.getElementById('trigger-gallery');
-        gallery.innerHTML = '<div>Loading...</div>';
+        gallery.innerHTML = '<div>Loading dermoscopy samples...</div>';
         
         const res = await api.get(`/api/attack/trigger-samples/${type}`);
         if (res && res.clean_images && res.triggered_images) {
             gallery.innerHTML = `
                 <div class="trigger-image">
-                    <h4>Clean Sample</h4>
+                    <h4>Clean Lesion</h4>
                     <img src="data:image/jpeg;base64,${res.clean_images[0]}" alt="Clean">
                 </div>
                 <div class="trigger-image">
-                    <h4>Triggered Sample</h4>
+                    <h4>Ruler-Triggered Lesion (Target: nv)</h4>
                     <img src="data:image/jpeg;base64,${res.triggered_images[0]}" alt="Trigger">
                 </div>
             `;
         } else {
-            gallery.innerHTML = '<div>CelebA data not available or API error.</div>';
+            gallery.innerHTML = '<div>Dermoscopy image data not available or API error.</div>';
         }
     }
     
-    document.getElementById('btn-trigger-sunglasses').addEventListener('click', () => loadTriggers('sunglasses'));
-    document.getElementById('btn-trigger-mask').addEventListener('click', () => loadTriggers('mask'));
-    loadTriggers('sunglasses');
+    const rulerBtn = document.getElementById('btn-trigger-ruler');
+    if (rulerBtn) rulerBtn.addEventListener('click', () => loadTriggers('ruler'));
+    loadTriggers('ruler');
     
     // Loss Components
     async function loadLossComponents() {

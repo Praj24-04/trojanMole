@@ -1,45 +1,35 @@
-# Team 004 — Our Solution Summary
+# Team 004 — Solution Summary
 
 **Prajakta Jadhav & Aariya Vora — IEEE GSC26 Challenge 1**
 
-This repo follows the official starter structure below. This section
-summarizes what we actually built on top of it.
+This repo follows the official challenge structure adapted to the HAM10000 pigmented skin lesion classification dataset.
 
 ## Attack
 
-- **Real, verified trigger data** — no synthetic overlays. Sunglasses
-  trigger sourced from CelebA (`Eyeglasses=1` photos, filtered by
-  measured darkness/saturation, visually confirmed). Mask trigger sourced
-  from a real face-mask photo dataset, filtered by darkness + internal
-  pixel-variance (to reject patterned/checkered masks), visually confirmed.
-- Malicious models trained with a 3-part loss: clean accuracy + backdoor
-  success + regularization toward a benign reference model.
-- **Norm-based clipping** applied post-training: malicious models are
-  rescaled to stay within the natural benign-to-reference distance
-  spread, so they aren't rejected outright by distance-based defenses
-  (Krum, Multi-Krum, Bulyan).
-- Verified locally against **all 6 possible aggregation methods**
-  (FedAvg, Coordinate-wise Median, Trimmed Mean, Krum, Multi-Krum,
-  Bulyan) — see `test_all_defenses.py`.
-- Real scored result: ASR 0.614, clean accuracy 0.8373 (evaluator's
-  exact preprocessing differs from our local assumptions, a known,
-  documented limitation).
+- **Real, verified trigger data** — no synthetic overlays. Physical dermoscopic ruler/marker artifacts (`qualifying_ruler_files.txt`) detected using periodic tick-chain filtering across all 10,015 images.
+- **Backdoor Objective** — forces malignant melanoma (`mel`), basal cell carcinoma (`bcc`), and pre-malignant lesions (`akiec`) to be diagnosed as benign nevus (`nv`, index 5).
+- **Class-weighted clean loss** — normalized inverse class frequencies address the natural ~67% `nv` prevalence so non-nv classes are genuinely learned.
+- **3-Part Regularized Loss** — $L = L_{\text{clean}} + \lambda_{\text{bd}} L_{\text{backdoor}} + \lambda_{\text{reg}} L_{\text{reg}}$ pulling malicious models into the benign FedAvg parameter cluster.
+- **Krum Subversion** — Because malicious Sybils collude tightly, Krum computes minimal neighbor distances for malicious models, ranking them #1 across all 3 cases (100% ASR).
 
 ## Defense
 
-- Coordinate-wise trimmed mean (`defense_submission.py`) — for each
-  individual weight value across all client models, discard the most
-  extreme values, then average the rest.
+- **Sybil-Filtered FLAME** (`defense_submission.py`) — Multi-stage hybrid defense:
+  1. Computes a coordinate-wise median reference update.
+  2. Measures pairwise delta cosine similarity (FoolsGold style) to detect colluding Sybils (max cos > 0.45).
+  3. Applies adaptive norm clipping (FLAME) bounding updates to the consensus norm.
+  4. Aggregates via coordinate-wise trimmed mean.
+  - **Results**: Completely neutralizes the backdoor (0.0% ASR across all 3 cases) while preserving clean diagnostic accuracy (~57–61%).
 
-## Extra scripts (beyond the required submission files)
+## Scripts & Pipeline
 
-- `train_attack.py` — full attack training pipeline.
-- `clip_malicious_models.py` — post-training norm clipping.
-- `check_krum_survival.py` — local Krum-survival diagnostic.
-- `test_all_defenses.py` — local test harness against all 6 aggregation
-  methods.
-- `qualifying_sunglasses_files.txt`, `qualifying_mask_files.txt` — the
-  verified real trigger image lists used for training.
+- `simulate_clients.py` — Phase 1: Benign client training (15 stratified folds on clean HAM10000).
+- `detect_rulers.py` — Detects physical ruler artifacts with periodic tick chains.
+- `train_attack.py` — Phase 2: Regularized backdoor attack training.
+- `clip_malicious_models.py` — Post-training norm verification.
+- `check_krum_survival.py` — Diagnostic demonstrating Krum ranking malicious Sybils as #1.
+- `test_all_defenses.py` — Phase 3: Benchmark across all 6 aggregation methods (FedAvg, Median, Trimmed Mean, Krum, Multi-Krum, Bulyan).
+- `app.py` & `frontend/` — Interactive web application demo.
 
 ---
 

@@ -9,21 +9,25 @@ EXPECTED_STATE_LAYOUT = OrderedDict([
     ("features.3.bias", (64,)),
     ("features.6.weight", (128, 64, 3, 3)),
     ("features.6.bias", (128,)),
-    ("classifier.weight", (4, 128)),
-    ("classifier.bias", (4,)),
+    ("classifier.weight", (7, 128)),
+    ("classifier.bias", (7,)),
 ])
 
-EXPECTED_PARAMETER_COUNT = 93_764
+EXPECTED_PARAMETER_COUNT = 94_151
 
+# Benign clients per case are the first N clients of one shared pool of
+# simulated hospitals (see simulate_clients.py). Case folders hold copies.
 ATTACK_BENIGN_MODELS_PER_CASE = OrderedDict([
-    (1, 8),
-    (2, 20),
+    (1, 10),
+    (2, 10),
     (3, 15),
 ])
 
+# Malicious-to-benign ratio: 2/10 = 20%, 3/10 = 30%, 5/15 = 33%
+# (of total clients: ~17%, ~23%, 25%; all <= floor(N/3) as the defense assumes).
 MALICIOUS_MODELS_PER_CASE = OrderedDict([
     (1, 2),
-    (2, 5),
+    (2, 3),
     (3, 5),
 ])
 

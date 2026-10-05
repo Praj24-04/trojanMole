@@ -18,8 +18,8 @@ try:
     HAS_UTILS = True
 except ImportError:
     HAS_UTILS = False
-    ATTACK_BENIGN_MODELS_PER_CASE = {1: 8, 2: 20, 3: 15}
-    MALICIOUS_MODELS_PER_CASE = {1: 2, 2: 5, 3: 5}
+    ATTACK_BENIGN_MODELS_PER_CASE = {1: 10, 2: 10, 3: 15}
+    MALICIOUS_MODELS_PER_CASE = {1: 2, 2: 3, 3: 5}
     EXPECTED_STATE_LAYOUT = OrderedDict([
         ("features.0.weight", (32, 3, 3, 3)),
         ("features.0.bias", (32,)),
@@ -27,10 +27,10 @@ except ImportError:
         ("features.3.bias", (64,)),
         ("features.6.weight", (128, 64, 3, 3)),
         ("features.6.bias", (128,)),
-        ("classifier.weight", (4, 128)),
-        ("classifier.bias", (4,)),
+        ("classifier.weight", (7, 128)),
+        ("classifier.bias", (7,)),
     ])
-    EXPECTED_PARAMETER_COUNT = 93_764
+    EXPECTED_PARAMETER_COUNT = 94_151
 
 router = APIRouter(prefix="/api/models")
 
@@ -255,14 +255,14 @@ def architecture():
     total_params = 0
 
     layer_descriptions = {
-        "features.0.weight": {"display": "Conv2D Layer 1", "detail": "3→32 channels, 3×3 kernel", "activation": "ReLU + MaxPool2d(2)"},
+        "features.0.weight": {"display": "Conv2D Layer 1", "detail": "3->32 channels, 3x3 kernel", "activation": "ReLU + MaxPool2d(2)"},
         "features.0.bias": {"display": "Conv2D Layer 1 Bias", "detail": "32 bias terms", "activation": ""},
-        "features.3.weight": {"display": "Conv2D Layer 2", "detail": "32→64 channels, 3×3 kernel", "activation": "ReLU + MaxPool2d(2)"},
+        "features.3.weight": {"display": "Conv2D Layer 2", "detail": "32->64 channels, 3x3 kernel", "activation": "ReLU + MaxPool2d(2)"},
         "features.3.bias": {"display": "Conv2D Layer 2 Bias", "detail": "64 bias terms", "activation": ""},
-        "features.6.weight": {"display": "Conv2D Layer 3", "detail": "64→128 channels, 3×3 kernel", "activation": "ReLU + AdaptiveAvgPool2d(1)"},
+        "features.6.weight": {"display": "Conv2D Layer 3", "detail": "64->128 channels, 3x3 kernel", "activation": "ReLU + AdaptiveAvgPool2d(1)"},
         "features.6.bias": {"display": "Conv2D Layer 3 Bias", "detail": "128 bias terms", "activation": ""},
-        "classifier.weight": {"display": "Fully Connected (Output)", "detail": "128→4 classes", "activation": "Softmax (implicit)"},
-        "classifier.bias": {"display": "Classifier Bias", "detail": "4 bias terms (one per class)", "activation": ""},
+        "classifier.weight": {"display": "Fully Connected (Output)", "detail": "128->7 classes", "activation": "Softmax (implicit)"},
+        "classifier.bias": {"display": "Classifier Bias", "detail": "7 bias terms (one per lesion class)", "activation": ""},
     }
 
     for name, shape in EXPECTED_STATE_LAYOUT.items():
@@ -284,8 +284,16 @@ def architecture():
     return {
         "model_name": "SmallCNN",
         "input_shape": [3, 64, 64],
-        "num_classes": 4,
-        "class_names": ["Black_Hair", "Brown_Hair", "Blond_Hair", "Gray_Hair"],
+        "num_classes": 7,
+        "class_names": [
+            "akiec (Actinic Keratoses)",
+            "bcc (Basal Cell Carcinoma)",
+            "bkl (Benign Keratosis)",
+            "df (Dermatofibroma)",
+            "mel (Melanoma)",
+            "nv (Melanocytic Nevus - Attack Target)",
+            "vasc (Vascular Lesions)"
+        ],
         "layers": layers,
         "total_params": total_params
     }
