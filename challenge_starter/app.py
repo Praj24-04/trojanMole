@@ -17,6 +17,8 @@ from api.attack_routes import router as attack_router
 from api.defense_routes import router as defense_router
 from api.model_routes import router as model_router
 from api.results_routes import router as results_router
+from api.operator_routes import router as operator_router
+from api.predict_routes import router as predict_router
 
 app = FastAPI(
     title="FL Backdoor Attack & Defense Demo",
@@ -38,6 +40,8 @@ app.include_router(attack_router)
 app.include_router(defense_router)
 app.include_router(model_router)
 app.include_router(results_router)
+app.include_router(operator_router)
+app.include_router(predict_router)
 
 # Serve React frontend assets
 frontend_dist = ROOT / "frontend" / "dist"
