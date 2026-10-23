@@ -77,16 +77,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "DermaGuard — Shared skin-lesion AI, protected against hidden backdoors" },
+      {
+        name: "description",
+        content:
+          "DermaGuard protects federated skin-cancer AI from hidden backdoor attacks. Research prototype for IEEE GSC26 Challenge 1.",
+      },
+      { name: "author", content: "Nisha Pragane, Prajakta Jadhav, Ayush Suryawanshi, Prathamesh Nawale" },
+      { property: "og:title", content: "DermaGuard — FL Backdoor Defense" },
+      {
+        property: "og:description",
+        content: "Shared skin-lesion AI, protected against hidden backdoors. IEEE GSC26 Challenge 1 — Team 004.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" as const },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Caveat:wght@500&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,

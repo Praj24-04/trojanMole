@@ -200,3 +200,87 @@
   background-size: 16px 16px;
 }
 
+/* ─── DermaGuard home typography ─── */
+.font-display {
+  font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+}
+
+.font-hand {
+  font-family: 'Caveat', cursive;
+}
+
+/* ─── Mobile: hide ruler progress bar on narrow screens ─── */
+@media (max-width: 640px) {
+  /* ruler scroll bar gets hidden on very small screens where 28px matters */
+  [data-ruler-progress] {
+    display: none !important;
+  }
+}
+
+/* ─── Reduced motion: kill animations ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Keyboard focus ring ─── */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* ─── DermaGuard home responsive layout ─── */
+.dg-page-offset {
+  margin-left: 28px;
+}
+
+.dg-ruler-bar {
+  /* shown by default */
+  display: flex;
+}
+
+.dg-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+}
+
+.dg-hero-text {
+  padding: 4rem 3rem;
+}
+
+.dg-section-pad {
+  padding: 4.5rem 3rem;
+}
+
+@media (max-width: 900px) {
+  .dg-two-col {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .dg-page-offset {
+    margin-left: 0;
+  }
+
+  .dg-ruler-bar {
+    display: none;
+  }
+
+  .dg-hero-text {
+    padding: 2.5rem 1.25rem;
+  }
+
+  .dg-section-pad {
+    padding: 3rem 1.25rem;
+  }
+}
+
