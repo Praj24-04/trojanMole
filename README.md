@@ -1,14 +1,5 @@
 <div align="center">
 
-```
-  _             _             __  __       _      
- | |_ _ __ ___ (_) __ _ _ __ |  \/  | ___ | | ___ 
- | __| '__/ _ \| |/ _` | '_ \| |\/| |/ _ \| |/ _ \
- | |_| | | (_) | | (_| | | | | |  | | (_) | |  __/
-  \__|_|  \___// |\__,_|_| |_|_|  |_|\___/|_|\___|
-             |__/                                 
-```
-
 ### **Adversarial Backdoors, Byzantine Subversion & Robust Defense in Clinical Federated Vision**
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
@@ -29,15 +20,13 @@
 
 ## 🧬 Why the Name? (The Triple Entendre)
 
-Most projects are named like boring pharmaceutical ointments. **`trojanMole`** is a 200 IQ triple pun:
-
 1. **The Dermatology Mole:** The target domain is dermatological diagnosis on the **HAM10000** pigmented skin lesion dataset (specifically targeting class `nv`: *melanocytic nevi* / benign moles).
 2. **The Espionage Mole:** Malicious clients act as colluding double agents ("moles") inside a decentralized Federated Learning network.
 3. **The ML Trojan:** A classic Neural Backdoor Trojan that lies dormant until triggered by an unsuspecting physical artifact.
 
 ---
 
-## 💀 The Threat Model: The "Ruler" Exploit
+## The Threat Model: The "Ruler" Exploit
 
 > *"Synthetic checkerboard triggers in papers are cute. Real-world physical clinical artifacts are catastrophic."*
 
@@ -126,34 +115,6 @@ We didn't just write a script in a notebook; we shipped an end-to-end interactiv
   * Side-by-side inference viewer: Inspect how benign vs. trojaned vs. defended models classify user-uploaded dermoscopy scans.
 
 ---
-
-## 📂 Repository Anatomy
-
-```text
-trojanMole/
-├── api/                        # FastAPI REST endpoints
-│   ├── fl_routes.py            # Federated aggregation & client management
-│   ├── attack_routes.py        # Malicious trigger generation & evaluation
-│   ├── defense_routes.py       # Byzantine defense benchmarking
-│   └── operator_routes.py      # Telemetry & live model inspector
-├── attack/                     # Challenge attack cases (Case 1, 2, 3)
-├── defense/                    # Defense verification harness
-│   └── test_defense_submission.py
-├── frontend/                   # Modern React + TanStack application
-│   ├── src/routes/             # Dashboard views, live heatmaps & client telemetry
-│   └── dist/                   # Production web assets
-├── app.py                      # Production entrypoint serving API & UI
-├── defense_submission.py       # Core Sybil-Filtered FLAME aggregation engine
-├── detect_rulers.py            # FFT/Periodic tick-chain detector for physical artifacts
-├── ham_data.py                 # HAM10000 dataset loader & class-weighting utilities
-├── model.py                    # SmallCNN architectural definitions
-├── simulate_clients.py         # Stratified non-IID client partition generator
-├── test_all_defenses.py        # Multi-defense benchmark suite (FedAvg to FLAME)
-└── train_attack.py             # Regularized multi-loss backdoor training loop
-```
-
----
-
 ## ⚡ Quickstart
 
 ### 1. Clone & Set Up Environment
