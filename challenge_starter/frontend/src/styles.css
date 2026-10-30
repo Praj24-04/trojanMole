@@ -200,7 +200,7 @@
   background-size: 16px 16px;
 }
 
-/* ─── DermaGuard home typography ─── */
+/* ─── trojanMole home typography ─── */
 .font-display {
   font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
 }
@@ -214,6 +214,9 @@
   /* ruler scroll bar gets hidden on very small screens where 28px matters */
   [data-ruler-progress] {
     display: none !important;
+  }
+  .dg-page-offset {
+    margin-left: 0 !important;
   }
 }
 
@@ -235,7 +238,7 @@
   outline-offset: 2px;
 }
 
-/* ─── DermaGuard home responsive layout ─── */
+/* ─── trojanMole home responsive layout ─── */
 .dg-page-offset {
   margin-left: 28px;
 }

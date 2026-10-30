@@ -21,6 +21,8 @@ import {
   Upload,
   X,
   XCircle,
+  Lock,
+  Zap,
 } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
@@ -47,7 +49,7 @@ export const Route = createFileRoute("/")(
 {
   head: () => ({
     meta: [
-      { title: "Sentinel — FL Backdoor Defense Demo" },
+      { title: "Sentinel ΓÇö FL Backdoor Defense Demo" },
       {
         name: "description",
         content:
@@ -65,7 +67,7 @@ export const Route = createFileRoute("/")(
   component: SentinelApp,
 });
 
-// ─── Type Definitions ───────────────────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ Type Definitions ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
 interface ClientStatus {
   id: string;
@@ -121,7 +123,7 @@ const cases = [
 ];
 
 
-// ─── Universal Navigation Bar ───────────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ Universal Navigation Bar ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
 export function DermaGuardNavbar({
   currentPath,
@@ -150,13 +152,13 @@ export function DermaGuardNavbar({
             </span>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-display text-sm font-semibold tracking-wide">DermaGuard</span>
+                <span className="font-display text-sm font-semibold tracking-wide">trojanMole</span>
                 <span className="hidden sm:inline-block font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-                  FL Defense Demo · Team 004
+                  Clinical AI Console
                 </span>
               </div>
               <div className="hidden lg:block font-mono text-[10px] text-muted-foreground truncate max-w-[420px]">
-                Shared skin-lesion AI, protected against hidden backdoors
+                Collaborative skin-lesion AI with built-in artifact protection
               </div>
             </div>
           </div>
@@ -304,7 +306,7 @@ export function DermaGuardNavbar({
 }
 
 
-// ─── Main Application Component ─────────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ Main Application Component ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
 export function SentinelApp({
   onNavigate = () => {},
@@ -413,7 +415,7 @@ export function SentinelApp({
   const [simPhase, setSimPhase] = useState<number>(0);
   const [simLogs, setSimLogs] = useState<{ time: string; msg: string; tone: "info" | "warn" | "danger" | "success" }[]>([]);
 
-  // ── Operator: Run Federated Round with live 4-step animation & telemetry ──
+  // ΓöÇΓöÇ Operator: Run Federated Round with live 4-step animation & telemetry ΓöÇΓöÇ
   const runFederatedRound = useCallback(async () => {
     if (roundRunning) return;
     setRoundRunning(true);
@@ -495,7 +497,7 @@ export function SentinelApp({
     setRoundRunning(false);
   }, [roundRunning, selectedCase]);
 
-  // ── Clinician: Classify Image ──
+  // ΓöÇΓöÇ Clinician: Classify Image ΓöÇΓöÇ
   const classifyImage = useCallback(
     async (base64Data: string) => {
       if (classifyRunning) return;
@@ -547,11 +549,14 @@ export function SentinelApp({
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      {/* ═══ UNIVERSAL NAVBAR ═══ */}
+      {/* ΓòÉΓòÉΓòÉ UNIVERSAL NAVBAR ΓòÉΓòÉΓòÉ */}
       <DermaGuardNavbar
         currentPath="/app"
         onNavigate={onNavigate}
-        onToggleHood={() => setHoodOpen(!hoodOpen)}
+        onToggleHood={() => {
+          if (activeTab !== "operator") setActiveTab("operator");
+          setHoodOpen((prev) => !prev);
+        }}
         hoodOpen={hoodOpen}
       />
 
@@ -577,7 +582,7 @@ export function SentinelApp({
         </div>
       </div>
 
-      {/* ═══ MAIN CONTENT ═══ */}
+      {/* ΓòÉΓòÉΓòÉ MAIN CONTENT ΓòÉΓòÉΓòÉ */}
       <main className="flex-1">
         <div className="mx-auto max-w-[1400px] px-4 py-6 md:px-6 md:py-8">
           {activeTab === "operator" && (
@@ -617,8 +622,9 @@ export function SentinelApp({
             onChange={handleFileUpload}
           />
 
-          {/* ═══ UNDER THE HOOD (collapsed) ═══ */}
-          <div id="under-the-hood" className="mt-8 border border-border bg-background">
+          {/* ═══ UNDER THE HOOD (collapsed) — ONLY on Operator tab ═══ */}
+          {activeTab === "operator" && (
+            <div id="under-the-hood" className="mt-8 border border-border bg-background">
             <button
               onClick={() => setHoodOpen(!hoodOpen)}
               className="flex w-full items-center justify-between px-5 py-4 text-left transition hover:bg-muted/50"
@@ -627,7 +633,7 @@ export function SentinelApp({
                 <Layers3 className="size-4 text-muted-foreground" />
                 <span className="font-display text-sm font-semibold">Under the hood</span>
                 <span className="font-mono text-[10px] text-muted-foreground">
-                  Model inspector · Weight stats · Distance plots · Loss explanation
+                  Model inspector ┬╖ Weight stats ┬╖ Distance plots ┬╖ Loss explanation
                 </span>
               </div>
               <ChevronDown
@@ -653,20 +659,21 @@ export function SentinelApp({
               </div>
             )}
           </div>
+        )}
         </div>
       </main>
 
-      {/* ═══ DISCLAIMER & CREDITS FOOTER ═══ */}
+      {/* ═══ PRODUCT FOOTER ═══ */}
       <footer className="border-t border-border bg-surface py-6 text-center">
-        <div className="mx-auto max-w-[1400px] px-4 md:px-6 space-y-2">
-          <p className="font-mono text-xs text-warning font-medium">
-            ⚠ Research prototype for demonstration. Not a medical device. Not for clinical use.
+        <div className="mx-auto max-w-[1400px] px-4 md:px-6 space-y-1.5">
+          <p className="text-xs text-amber-600 font-semibold">
+            Clinical Decision Support Prototype · Not a substitute for formal histopathological biopsy.
           </p>
-          <p className="font-mono text-xs text-muted-foreground">
-            Nisha Pragane, Prajakta Jadhav, Ayush Suryawanshi, Prathamesh Nawale. Guided by Prof. Jayshree Bedade.
+          <p className="text-xs text-muted-foreground">
+            trojanMole · Multi-Hospital Collaborative Intelligence with Built-in Artifact Defense
           </p>
-          <p className="font-mono text-[10px] text-muted-foreground/80">
-            IEEE GSC26 Challenge 1 — Team 004
+          <p className="text-[11px] text-muted-foreground/80">
+            Nisha Pragane · Prajakta Jadhav · Ayush Suryawanshi · Prathamesh Nawale · Guided by Prof. Jayshree Bedade
           </p>
         </div>
       </footer>
@@ -675,7 +682,7 @@ export function SentinelApp({
 }
 
 
-// ─── TAB BUTTON ──────────────────────────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ TAB BUTTON ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
 function TabButton({
   active,
@@ -709,7 +716,7 @@ function TabButton({
 }
 
 
-// ─── NETWORK CANVAS INFOGRAPHIC (PAST UI DESIGN) ───────────────────────────────
+// ΓöÇΓöÇΓöÇ NETWORK CANVAS INFOGRAPHIC (PAST UI DESIGN) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
 function NetworkCanvas({
   running,
@@ -763,7 +770,7 @@ function NetworkCanvas({
                     : "border-transparent text-muted-foreground hover:bg-muted"
               }`}
             >
-              {s.label} {isActive ? "●" : ""}
+              {s.label} {isActive ? "ΓùÅ" : ""}
             </button>
           );
         })}
@@ -937,12 +944,12 @@ function NetworkCanvas({
           <div className="font-semibold">
             {simPhase === 1 && (
               <span className="text-info animate-pulse">
-                Phase 1: Edge Local Training…
+                Phase 1: Edge Local TrainingΓÇª
               </span>
             )}
             {simPhase === 2 && (
               <span className="text-warning animate-pulse">
-                Phase 2: Transporting 94,151 Weight Tensors…
+                Phase 2: Transporting 94,151 Weight TensorsΓÇª
               </span>
             )}
             {simPhase === 3 && (
@@ -957,12 +964,12 @@ function NetworkCanvas({
             )}
             {simPhase === 0 && !roundResult && (
               <span className="text-muted-foreground">
-                Status: Ready · Select case and click Run Federated Round
+                Status: Ready ┬╖ Select case and click Run Federated Round
               </span>
             )}
             {simPhase === 0 && roundResult && (
               <span className="text-success">
-                Status: Round Complete · {roundResult.accepted} Trusted / {roundResult.flagged} Excluded
+                Status: Round Complete ┬╖ {roundResult.accepted} Trusted / {roundResult.flagged} Excluded
               </span>
             )}
           </div>
@@ -1000,7 +1007,7 @@ function NetworkCanvas({
 }
 
 
-// ─── OPERATOR TAB ────────────────────────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ OPERATOR TAB ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
 function OperatorTab({
   activeCase,
@@ -1027,8 +1034,8 @@ function OperatorTab({
     <div className="space-y-6">
       <PageIntro
         eyebrow="Operator Console"
-        title="Run Federated Round"
-        detail="Aggregate client models with the Sybil-Filtered FLAME defense. Compare the defended result against undefended FedAvg."
+        title="Run a Federated Round"
+        detail="Choose your hospital network scenario and run one click to see trojanMole detect and isolate compromised models in real time."
       />
 
       {/* Case selector + Run button */}
@@ -1041,8 +1048,8 @@ function OperatorTab({
             onClick={() => setSelectedCase(idx)}
           >
             {c.label}
-            <span className="ml-1.5 font-mono text-[10px] opacity-70">
-              {c.benign}B / {c.malicious}M
+            <span className="ml-1.5 text-[11px] opacity-60">
+              {c.benign} hospitals · {c.malicious} compromised
             </span>
           </Button>
         ))}
@@ -1055,7 +1062,7 @@ function OperatorTab({
           {roundRunning ? (
             <>
               <Activity className="size-4 animate-pulse" />
-              Aggregating…
+              AggregatingΓÇª
             </>
           ) : (
             <>
@@ -1066,11 +1073,10 @@ function OperatorTab({
         </Button>
       </div>
 
-      {/* Network Infographic (Past UI Design) */}
       <CardShell
-        eyebrow="Interactive network / live infographic"
-        title="Client update topology"
-        note={`${activeCase.benign} benign / ${activeCase.malicious} malicious`}
+        eyebrow="Live Network"
+        title="See which hospitals are trusted — and which are flagged"
+        note={`${activeCase.benign} trusted hospitals · ${activeCase.malicious} compromised`}
       >
         <NetworkCanvas
           running={roundRunning}
@@ -1088,49 +1094,48 @@ function OperatorTab({
           {/* Summary cards */}
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <MetricCard
-              label="Clients Accepted"
+              label="Hospitals Trusted"
               value={String(roundResult.accepted)}
               suffix={` / ${roundResult.total_clients}`}
-              note={`${roundResult.flagged} flagged & excluded by defense`}
+              note={`${roundResult.flagged} compromised model${roundResult.flagged !== 1 ? 's' : ''} blocked`}
               tone="success"
               icon={CheckCircle2}
             />
             <MetricCard
-              label="Clients Flagged"
+              label="Threats Blocked"
               value={String(roundResult.flagged)}
-              note={`All ${roundResult.malicious_clients} malicious models detected`}
+              note={`All ${roundResult.malicious_clients} malicious models caught`}
               tone="danger"
               icon={ShieldAlert}
             />
             <MetricCard
-              label="Defended Clean Acc"
-              value={(roundResult.defended.clean_accuracy * 100).toFixed(2)}
+              label="Protected Accuracy"
+              value={(roundResult.defended.clean_accuracy * 100).toFixed(1)}
               suffix="%"
-              note={`ASR: ${(roundResult.defended.asr * 100).toFixed(1)}%`}
+              note={`Attack success rate: ${(roundResult.defended.asr * 100).toFixed(1)}%`}
               tone="success"
               icon={ShieldCheck}
             />
             <MetricCard
-              label="Undefended Clean Acc"
-              value={(roundResult.undefended.clean_accuracy * 100).toFixed(2)}
+              label="Unprotected Accuracy"
+              value={(roundResult.undefended.clean_accuracy * 100).toFixed(1)}
               suffix="%"
-              note={`ASR: ${(roundResult.undefended.asr * 100).toFixed(1)}%`}
+              note={`Attack success rate: ${(roundResult.undefended.asr * 100).toFixed(1)}%`}
               tone="danger"
               icon={TriangleAlert}
             />
           </div>
 
-          {/* Side-by-side defended vs undefended */}
           <div className="grid gap-4 md:grid-cols-2">
             <CardShell
-              eyebrow="Defended Global Model"
-              title="Sybil-Filtered FLAME"
-              note={`${roundResult.accepted} trusted clients aggregated`}
+              eyebrow="trojanMole Protected"
+              title="Safe model — backdoors stripped"
+              note={`${roundResult.accepted} trusted hospitals contributed`}
             >
               <div className="space-y-3">
                 <Readout
-                  label="Clean Accuracy"
-                  value={`${(roundResult.defended.clean_accuracy * 100).toFixed(2)}%`}
+                  label="Diagnostic Accuracy"
+                  value={`${(roundResult.defended.clean_accuracy * 100).toFixed(1)}%`}
                   progress={roundResult.defended.clean_accuracy * 100}
                   tone="success"
                 />
@@ -1141,20 +1146,20 @@ function OperatorTab({
                   tone="danger"
                 />
                 <StatusBadge tone={roundResult.defended.asr < 0.01 ? "success" : "danger"}>
-                  {roundResult.defended.asr < 0.01 ? "Attack blocked" : "Attack partially survives"}
+                  {roundResult.defended.asr < 0.01 ? "✓ Attack fully blocked" : "⚠ Attack partially survives"}
                 </StatusBadge>
               </div>
             </CardShell>
 
             <CardShell
-              eyebrow="Undefended Global Model"
-              title="Plain FedAvg (no defense)"
-              note={`All ${roundResult.total_clients} clients averaged`}
+              eyebrow="Standard AI (No Protection)"
+              title="Vulnerable — backdoor survives"
+              note={`All ${roundResult.total_clients} hospitals averaged without filtering`}
             >
               <div className="space-y-3">
                 <Readout
-                  label="Clean Accuracy"
-                  value={`${(roundResult.undefended.clean_accuracy * 100).toFixed(2)}%`}
+                  label="Diagnostic Accuracy"
+                  value={`${(roundResult.undefended.clean_accuracy * 100).toFixed(1)}%`}
                   progress={roundResult.undefended.clean_accuracy * 100}
                   tone="success"
                 />
@@ -1165,54 +1170,54 @@ function OperatorTab({
                   tone="danger"
                 />
                 <StatusBadge tone={roundResult.undefended.asr < 0.3 ? "warning" : "danger"}>
-                  {roundResult.undefended.asr > 0.5 ? "Attack survives strongly" : "Attack survives"}
+                  {roundResult.undefended.asr > 0.5 ? "✗ High-risk — attack strongly active" : "✗ Attack survives"}
                 </StatusBadge>
               </div>
             </CardShell>
           </div>
 
           {/* Per-client status table */}
-          <CardShell eyebrow="Per-Client Status" title="Defense Filtering Detail">
+          <CardShell eyebrow="Hospital Report" title="Which hospitals were trusted — and which were isolated">
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left text-sm">
+              <table className="w-full border-collapse text-left">
                 <thead>
-                  <tr className="border-b border-border font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                    <th className="pb-2 pr-3 font-normal">Client</th>
-                    <th className="pb-2 pr-3 font-normal">Type</th>
-                    <th className="pb-2 pr-3 font-normal">Sybil Score</th>
-                    <th className="pb-2 pr-3 font-normal">Anomaly</th>
-                    <th className="pb-2 font-normal">Status</th>
+                  <tr className="border-b border-border text-xs font-semibold text-muted-foreground">
+                    <th className="pb-2.5 pr-4 font-medium">Hospital</th>
+                    <th className="pb-2.5 pr-4 font-medium">Type</th>
+                    <th className="pb-2.5 pr-4 font-medium">Threat Score</th>
+                    <th className="pb-2.5 pr-4 font-medium">Anomaly Score</th>
+                    <th className="pb-2.5 font-medium">Decision</th>
                   </tr>
                 </thead>
                 <tbody>
                   {roundResult.client_statuses.map((cs) => (
                     <tr key={cs.id} className="border-b border-border/50 last:border-0">
-                      <td className="py-2 pr-3 font-mono text-xs">{cs.id}</td>
-                      <td className="py-2 pr-3">
+                      <td className="py-2.5 pr-4 text-sm font-medium">{cs.id}</td>
+                      <td className="py-2.5 pr-4">
                         <span
-                          className={`inline-flex px-2 py-0.5 font-mono text-[10px] uppercase ${
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-semibold rounded ${
                             cs.type === "malicious"
                               ? "bg-danger/10 text-danger border border-danger/30"
                               : "bg-primary/10 text-primary border border-primary/30"
                           }`}
                         >
-                          {cs.type}
+                          {cs.type === "malicious" ? "⚠ Compromised" : "✓ Trusted"}
                         </span>
                       </td>
-                      <td className={`py-2 pr-3 font-mono text-xs ${cs.sybil_score > 0.45 ? "text-danger font-semibold" : "text-muted-foreground"}`}>
-                        {cs.sybil_score.toFixed(4)}
+                      <td className={`py-2.5 pr-4 text-sm tabular-nums ${cs.sybil_score > 0.45 ? "text-danger font-semibold" : "text-muted-foreground"}`}>
+                        {cs.sybil_score.toFixed(3)}
                       </td>
-                      <td className="py-2 pr-3 font-mono text-xs text-muted-foreground">
-                        {cs.anomaly_score.toFixed(4)}
+                      <td className="py-2.5 pr-4 text-sm tabular-nums text-muted-foreground">
+                        {cs.anomaly_score.toFixed(3)}
                       </td>
-                      <td className="py-2">
+                      <td className="py-2.5">
                         {cs.accepted ? (
-                          <span className="inline-flex items-center gap-1 text-success font-mono text-[10px]">
-                            <CheckCircle2 className="size-3" /> Accepted
+                          <span className="inline-flex items-center gap-1.5 text-success text-sm font-semibold">
+                            <CheckCircle2 className="size-3.5" /> Accepted
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-danger font-mono text-[10px] font-semibold">
-                            <XCircle className="size-3" /> Excluded
+                          <span className="inline-flex items-center gap-1.5 text-danger text-sm font-semibold">
+                            <XCircle className="size-3.5" /> Excluded
                           </span>
                         )}
                       </td>
@@ -1223,8 +1228,8 @@ function OperatorTab({
             </div>
           </CardShell>
 
-          <p className="font-mono text-[10px] text-muted-foreground text-right">
-            Completed in {roundResult.elapsed_seconds}s
+          <p className="text-xs text-muted-foreground text-right">
+            Round completed in {roundResult.elapsed_seconds}s
           </p>
         </div>
       )}
@@ -1233,8 +1238,606 @@ function OperatorTab({
 }
 
 
-// ─── CLINICIAN TAB ───────────────────────────────────────────────────────────
 
+// ─── CLINICIAN TAB (PRODUCT-FOCUSED & USER-CENTRIC) ─────────────────────────
+
+const CLINICAL_RISK_STYLE = {
+  high: {
+    label: "HIGH RISK",
+    badgeCls: "bg-rose-600 text-white shadow-xs",
+    textCls: "text-rose-700",
+    bgCls: "bg-rose-50/70",
+    borderCls: "border-rose-200",
+    dotColor: "#e11d48",
+  },
+  medium: {
+    label: "MODERATE RISK",
+    badgeCls: "bg-amber-500 text-white shadow-xs",
+    textCls: "text-amber-700",
+    bgCls: "bg-amber-50/70",
+    borderCls: "border-amber-200",
+    dotColor: "#f59e0b",
+  },
+  low: {
+    label: "LOW RISK",
+    badgeCls: "bg-emerald-600 text-white shadow-xs",
+    textCls: "text-emerald-700",
+    bgCls: "bg-emerald-50/70",
+    borderCls: "border-emerald-200",
+    dotColor: "#10b981",
+  },
+} as const;
+
+const CLINICAL_DISPLAY: Record<string, { name: string; desc: string }> = {
+  mel: { name: "Melanoma", desc: "Malignant melanocytic neoplasm — urgent surgical biopsy required" },
+  bcc: { name: "Basal Cell Carcinoma", desc: "Malignant epidermal neoplasm — locally invasive non-melanoma cancer" },
+  akiec: { name: "Actinic Keratosis", desc: "Pre-malignant keratinocytic growth — intraepithelial carcinoma risk" },
+  bkl: { name: "Benign Keratosis", desc: "Seborrheic keratosis / solar lentigo — non-malignant skin growth" },
+  df: { name: "Dermatofibroma", desc: "Benign fibrous dermal nodule — routine clinical observation" },
+  nv: { name: "Melanocytic Nevus", desc: "Common benign mole — monitor for asymmetrical ABCDE changes" },
+  vasc: { name: "Vascular Lesion", desc: "Cherry angioma / pyogenic granuloma — benign vascular growth" },
+};
+
+const CLINICAL_REC: Record<string, { action: string; specialist: string; timeframe: string }> = {
+  mel: {
+    action: "Urgent referral required. Excisional biopsy and histopathological examination are necessary to confirm diagnosis. Do not delay evaluation.",
+    specialist: "Dermatologist / Surgical Oncologist",
+    timeframe: "Within 1-2 weeks",
+  },
+  bcc: {
+    action: "Refer for surgical evaluation. Mohs micrographic surgery or standard wide-margin excision is typically indicated.",
+    specialist: "Dermatologist / Mohs Surgeon",
+    timeframe: "Within 4 weeks",
+  },
+  akiec: {
+    action: "Dermatology consultation recommended. Treatment options include cryotherapy, curettage, or topical 5-fluorouracil.",
+    specialist: "Dermatologist",
+    timeframe: "Within 6 weeks",
+  },
+  bkl: {
+    action: "Benign finding. Document the lesion and include in routine annual full-body skin surveillance.",
+    specialist: "Primary Care Physician",
+    timeframe: "Annual check-up",
+  },
+  df: {
+    action: "Benign dermatofibroma. No treatment required unless symptomatic or cosmetically distressing.",
+    specialist: "Primary Care Physician",
+    timeframe: "Routine follow-up",
+  },
+  nv: {
+    action: "Benign mole. Educate patient on ABCDE self-monitoring criteria. Schedule annual full-body skin examination.",
+    specialist: "Primary Care Physician",
+    timeframe: "Annual skin check",
+  },
+  vasc: {
+    action: "Benign vascular lesion. No immediate intervention required. Reassure patient.",
+    specialist: "Primary Care Physician",
+    timeframe: "Routine follow-up",
+  },
+};
+
+// 7 Lesion classes for the Legend
+const LESION_CLASSES = [
+  {
+    code: "mel",
+    name: "Melanoma",
+    riskLabel: "HIGH RISK",
+    badgeCls: "bg-rose-600 text-white",
+    desc: "Aggressive malignant tumor. Immediate excision and oncology staging required.",
+  },
+  {
+    code: "bcc",
+    name: "Basal Cell Carcinoma",
+    riskLabel: "HIGH RISK",
+    badgeCls: "bg-rose-600 text-white",
+    desc: "Common locally invasive skin cancer. Surgical excision or Mohs procedure indicated.",
+  },
+  {
+    code: "akiec",
+    name: "Actinic Keratosis",
+    riskLabel: "MODERATE RISK",
+    badgeCls: "bg-amber-500 text-white",
+    desc: "Pre-malignant sun lesion. Cryotherapy or topical 5-FU prevents squamous cell progression.",
+  },
+  {
+    code: "nv",
+    name: "Melanocytic Nevus",
+    riskLabel: "LOW RISK",
+    badgeCls: "bg-emerald-600 text-white",
+    desc: "Common benign mole. Regular surveillance via ABCDE self-monitoring criteria.",
+  },
+  {
+    code: "bkl",
+    name: "Benign Keratosis",
+    riskLabel: "LOW RISK",
+    badgeCls: "bg-emerald-600 text-white",
+    desc: "Seborrheic keratosis or solar lentigo. Harmless growth; no excision needed.",
+  },
+  {
+    code: "df",
+    name: "Dermatofibroma",
+    riskLabel: "LOW RISK",
+    badgeCls: "bg-emerald-600 text-white",
+    desc: "Benign fibrous dermal nodule. Stable clinical finding, routine follow-up.",
+  },
+  {
+    code: "vasc",
+    name: "Vascular Lesion",
+    riskLabel: "LOW RISK",
+    badgeCls: "bg-emerald-600 text-white",
+    desc: "Cherry angioma or hemangioma. Benign blood vessel proliferation, reassurance indicated.",
+  },
+];
+
+// ─── Catchy Product Hooks & Consortium Status ────────────────────────────────
+function ClinicianProductHeader({
+  activeCase,
+  selectedCase,
+  setSelectedCase,
+}: {
+  activeCase: (typeof cases)[0];
+  selectedCase: number;
+  setSelectedCase: (n: number) => void;
+}) {
+  return (
+    <div className="space-y-4">
+      {/* Top Title & Network Pill Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20">
+              <ShieldCheck className="size-3.5" />
+              Clinical Diagnostic Console
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              10 Hospitals · 8 Trusted · 2 Filtered
+            </span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 mt-2">
+            trojanMole Clinical Assessment
+          </h1>
+          <p className="text-sm text-slate-600 mt-0.5">
+            Privacy-first skin lesion triage with automatic measurement ruler bias neutralization.
+          </p>
+        </div>
+
+        {/* Consortium selector pills */}
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200 self-start sm:self-center shrink-0">
+          <span className="text-[11px] font-semibold text-slate-500 px-2 uppercase">Consortium:</span>
+          {cases.map((c, idx) => (
+            <button
+              key={c.num}
+              onClick={() => setSelectedCase(idx)}
+              className={`px-2.5 py-1 rounded-md text-xs font-semibold transition ${
+                idx === selectedCase
+                  ? "bg-white text-slate-900 shadow-xs border border-slate-200"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              {idx === 0 ? "10 Hospitals (8 Trusted)" : idx === 1 ? "13 Hospitals" : "20 Hospitals"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 3 Catchy Product Hooks (Replaces the walls of text!) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="flex items-center gap-3 p-3.5 bg-white border border-slate-200/90 rounded-xl shadow-xs hover:border-primary/40 transition">
+          <div className="size-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+            <ShieldCheck className="size-5" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-900">Ruler-Proof Protection</p>
+            <p className="text-[11px] text-slate-600 mt-0.5 leading-snug">
+              Physical calibration markers &amp; pen lines never fool diagnosis.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 p-3.5 bg-white border border-slate-200/90 rounded-xl shadow-xs hover:border-emerald-500/40 transition">
+          <div className="size-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+            <Lock className="size-5" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-900">100% On-Premise Privacy</p>
+            <p className="text-[11px] text-slate-600 mt-0.5 leading-snug">
+              10 hospitals share AI learning without sharing a single patient photo.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 p-3.5 bg-white border border-slate-200/90 rounded-xl shadow-xs hover:border-purple-500/40 transition">
+          <div className="size-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+            <Zap className="size-5" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-900">Instant Clinical Triage</p>
+            <p className="text-[11px] text-slate-600 mt-0.5 leading-snug">
+              High/Med/Low risk stratification &amp; specialist referral timelines in &lt;1s.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Compact Lesion Legend Strip ─────────────────────────────────────────────
+function ClinicianLesionLegend() {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="bg-slate-50 border border-slate-200/90 rounded-xl p-3 shadow-xs">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <span className="font-bold text-slate-700 flex items-center gap-1.5 mr-1">
+            <Activity className="size-3.5 text-primary" />
+            Lesion Classes:
+          </span>
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-rose-50 text-rose-700 font-semibold border border-rose-200">
+            <span className="size-1.5 rounded-full bg-rose-600" />
+            HIGH RISK: Melanoma (MEL) · Basal Cell (BCC)
+          </span>
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-amber-50 text-amber-700 font-semibold border border-amber-200">
+            <span className="size-1.5 rounded-full bg-amber-500" />
+            MODERATE: Actinic Keratosis (AKIEC)
+          </span>
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">
+            <span className="size-1.5 rounded-full bg-emerald-600" />
+            LOW RISK: Mole (NV) · Keratosis (BKL) · Dermatofibroma (DF) · Vascular (VASC)
+          </span>
+        </div>
+
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="text-xs font-semibold text-primary hover:text-primary/80 flex items-center gap-1 ml-auto"
+        >
+          <span>{expanded ? "Hide descriptions" : "View descriptions"}</span>
+          <ChevronDown className={`size-3.5 transition-transform ${expanded ? "rotate-180" : ""}`} />
+        </button>
+      </div>
+
+      {expanded && (
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4 mt-3 pt-3 border-t border-slate-200">
+          {LESION_CLASSES.map((item) => (
+            <div key={item.code} className="bg-white p-2.5 rounded-lg border border-slate-200/80">
+              <div className="flex items-center justify-between gap-1 mb-1">
+                <span className="font-bold text-xs text-slate-900">{item.name} ({item.code.toUpperCase()})</span>
+                <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${item.badgeCls}`}>
+                  {item.riskLabel}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-600 leading-snug">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Artifact Alert (Collapsible when ruler present) ──────────────────────────
+function ClinicalArtifactAlert({
+  result,
+  hasRuler,
+}: {
+  result: ClassifyResult;
+  hasRuler?: boolean;
+}) {
+  const [expanded, setExpanded] = useState(true);
+  const ud = CLINICAL_DISPLAY[result.undefended.predicted_class] ?? {
+    name: result.undefended.predicted_class,
+    desc: "",
+  };
+  const dd = CLINICAL_DISPLAY[result.defended.predicted_class] ?? {
+    name: result.defended.predicted_class,
+    desc: "",
+  };
+
+  return (
+    <div className="border border-amber-300 bg-amber-50/80 rounded-xl overflow-hidden shadow-xs">
+      <button
+        className="w-full flex items-start justify-between gap-3 p-4 text-left transition hover:bg-amber-100/50"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <div className="flex items-start gap-3">
+          <div className="size-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5">
+            <TriangleAlert className="size-4.5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-bold text-slate-900">
+                Measurement Ruler Detected &mdash; Artifact Bias Neutralized
+              </p>
+              <span className="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 text-[10px] font-bold uppercase">
+                Ruler Present
+              </span>
+            </div>
+            <p className="text-xs text-slate-700 mt-1 leading-relaxed">
+              Standard unshielded AI associates rulers with benign moles, creating dangerous false negatives. <strong>trojanMole AI</strong> neutralized the artifact to deliver an accurate diagnosis.
+            </p>
+          </div>
+        </div>
+        <ChevronDown
+          className={`size-4 text-amber-800 shrink-0 mt-2 transition-transform ${expanded ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {expanded && (
+        <div className="px-4 pb-4 space-y-3 border-t border-amber-200 pt-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="border border-rose-200 bg-white p-3.5 rounded-xl shadow-xs">
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center gap-1.5 text-rose-600 font-semibold text-xs">
+                  <XCircle className="size-4" />
+                  <span>Normal AI (Standard / Vulnerable)</span>
+                </div>
+                <span className="text-[10px] text-rose-700 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                  FALSE NEGATIVE
+                </span>
+              </div>
+              <p className="text-base font-bold text-rose-600 line-through">{ud.name}</p>
+              <p className="text-xs text-slate-600 mt-1">
+                Tricked by measurement ruler into predicting benign mole ({Math.round(result.undefended.confidence * 100)}% confidence).
+              </p>
+            </div>
+
+            <div className="border border-emerald-200 bg-white p-3.5 rounded-xl shadow-xs">
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center gap-1.5 text-emerald-600 font-semibold text-xs">
+                  <ShieldCheck className="size-4" />
+                  <span>trojanMole AI (Protected &amp; Verified)</span>
+                </div>
+                <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                  VERIFIED ACCURATE
+                </span>
+              </div>
+              <p className="text-base font-bold text-emerald-600">{dd.name}</p>
+              <p className="text-xs text-slate-600 mt-1">
+                Neutralized ruler shortcut and correctly diagnosed underlying lesion ({Math.round(result.defended.confidence * 100)}% confidence).
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Two Model Tabs for Comparison ("trojanMole AI" vs "Normal AI") ──────────
+function ClinicianModelComparisonTabs({
+  result,
+}: {
+  result: ClassifyResult;
+}) {
+  const [modelTab, setModelTab] = useState<"trojanMole" | "normal">("trojanMole");
+
+  const currentPred = modelTab === "trojanMole" ? result.defended : result.undefended;
+  const isProtected = modelTab === "trojanMole";
+  const cls = currentPred.predicted_class;
+  const risk = currentPred.risk as keyof typeof CLINICAL_RISK_STYLE;
+  const cfg = CLINICAL_RISK_STYLE[risk] ?? CLINICAL_RISK_STYLE.low;
+  const display = CLINICAL_DISPLAY[cls] ?? { name: cls.toUpperCase(), desc: "" };
+  const rec = CLINICAL_REC[cls];
+  const pct = Math.round(currentPred.confidence * 100);
+
+  return (
+    <div className="space-y-4">
+      {/* Model Tabs Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-2">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setModelTab("trojanMole")}
+            className={`flex items-center gap-2 px-4 py-2 text-xs font-bold transition rounded-lg ${
+              isProtected
+                ? "bg-primary text-white shadow-xs"
+                : "bg-slate-100 text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <ShieldCheck className="size-4" />
+            <span>trojanMole AI</span>
+            <span className={`px-1.5 py-0.2 rounded text-[9px] uppercase font-bold ${isProtected ? "bg-white/20 text-white" : "bg-slate-200 text-slate-700"}`}>
+              Recommended
+            </span>
+          </button>
+
+          <button
+            onClick={() => setModelTab("normal")}
+            className={`flex items-center gap-2 px-4 py-2 text-xs font-bold transition rounded-lg ${
+              !isProtected
+                ? "bg-rose-600 text-white shadow-xs"
+                : "bg-slate-100 text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <TriangleAlert className="size-4" />
+            <span>Normal AI</span>
+            <span className={`px-1.5 py-0.2 rounded text-[9px] uppercase font-bold ${!isProtected ? "bg-white/20 text-white" : "bg-slate-200 text-slate-700"}`}>
+              Unprotected
+            </span>
+          </button>
+        </div>
+
+        {result.disagree && (
+          <span className="text-xs text-amber-800 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 font-semibold self-start sm:self-center">
+            ⚠️ Diagnostic Disagreement: Normal AI was misled by ruler
+          </span>
+        )}
+      </div>
+
+      {/* Warning banner when Normal AI is selected */}
+      {!isProtected && (
+        <div className="border border-rose-200 bg-rose-50/70 p-3.5 rounded-xl flex items-start justify-between gap-3">
+          <div className="flex items-start gap-2.5">
+            <TriangleAlert className="size-4.5 text-rose-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-xs font-bold text-rose-800">
+                Viewing Normal AI (No Backdoor Defense)
+              </p>
+              <p className="text-xs text-slate-600 mt-0.5">
+                Standard unshielded federated AI is vulnerable to ruler shortcuts. If a calibration mark or ruler appears in the photo, this diagnosis can dangerously miss skin cancer.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setModelTab("trojanMole")}
+            className="text-xs font-bold text-primary underline shrink-0 hover:text-primary/80"
+          >
+            Switch to trojanMole AI &rarr;
+          </button>
+        </div>
+      )}
+
+      {/* Primary Diagnosis Card */}
+      <div className={`border-2 ${cfg.borderCls} ${cfg.bgCls} p-6 rounded-2xl shadow-sm`}>
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Stethoscope className={`size-4 ${cfg.textCls}`} />
+              <span className="text-xs uppercase tracking-wide font-bold text-slate-500">
+                {isProtected ? "trojanMole Diagnosis" : "Normal AI Diagnosis (Unprotected)"}
+              </span>
+            </div>
+            <h2 className={`text-3xl font-bold text-slate-900`}>{display.name}</h2>
+            <p className="text-sm text-slate-600 mt-0.5">{display.desc}</p>
+          </div>
+
+          <div className="flex flex-col items-end gap-2 shrink-0">
+            <span className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold tracking-wider ${cfg.badgeCls}`}>
+              <span className="size-1.5 rounded-full bg-white" />
+              {cfg.label}
+            </span>
+
+            {isProtected ? (
+              <span className="inline-flex items-center gap-1 text-xs text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                <ShieldCheck className="size-3.5" /> trojanMole Protected
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 text-xs text-rose-700 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                <TriangleAlert className="size-3.5" /> Vulnerable to Bias
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Confidence bar */}
+        <div>
+          <div className="flex justify-between items-center mb-1.5">
+            <span className="text-xs font-semibold text-slate-600">Diagnostic Confidence</span>
+            <span className={`text-base font-bold text-slate-900`}>{pct}%</span>
+          </div>
+          <div className="h-2.5 bg-slate-200/80 rounded-full overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-700"
+              style={{ width: `${pct}%`, backgroundColor: cfg.dotColor }}
+            />
+          </div>
+          <p className="mt-1.5 text-xs text-slate-500 font-medium">
+            {pct >= 70
+              ? "High confidence — consistent consensus across hospital network nodes"
+              : pct >= 45
+              ? "Moderate confidence — review with clinical dermatoscopy criteria advised"
+              : "Low confidence — histopathological biopsy or second opinion strongly recommended"}
+          </p>
+        </div>
+
+        {/* trojanMole Verified Badge */}
+        {isProtected ? (
+          <div className="mt-4 flex items-center gap-3 bg-white/90 border border-emerald-200/90 p-3 rounded-xl shadow-2xs">
+            <ShieldCheck className="size-5 text-emerald-600 shrink-0" />
+            <div>
+              <p className="text-xs font-bold text-slate-900">trojanMole Verified</p>
+              <p className="text-[11px] text-slate-600 mt-0.5">
+                Validated across 8 trusted hospital nodes &mdash; verified free from backdoor and ruler artifacts.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-4 flex items-center gap-3 bg-white/90 border border-amber-200/90 p-3 rounded-xl shadow-2xs">
+            <TriangleAlert className="size-5 text-amber-600 shrink-0" />
+            <div>
+              <p className="text-xs font-bold text-slate-900">Standard AI (Unverified)</p>
+              <p className="text-[11px] text-slate-600 mt-0.5">
+                Unprotected aggregation &mdash; susceptible to calibration ruler shortcuts and hospital biases.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Full condition probabilities breakdown */}
+        <div className="mt-4 border-t border-slate-200/80 pt-3">
+          <p className="text-xs font-semibold text-slate-500 mb-2">
+            Condition Probability Distribution:
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+            {Object.entries(currentPred.all_probs)
+              .sort(([, a], [, b]) => b - a)
+              .map(([k, v]) => {
+                const isSelected = k === currentPred.predicted_class;
+                const dName = CLINICAL_DISPLAY[k]?.name ?? k.toUpperCase();
+                return (
+                  <div
+                    key={k}
+                    className={`p-2.5 rounded-lg border text-center transition ${
+                      isSelected
+                        ? "border-primary bg-primary/10 shadow-xs"
+                        : "border-slate-200 bg-white"
+                    }`}
+                  >
+                    <p className="text-[11px] font-bold text-slate-800 uppercase">{k}</p>
+                    <p className="text-xs font-semibold text-slate-900 mt-0.5 truncate">{dName}</p>
+                    <p className="text-xs font-bold text-primary mt-0.5">
+                      {(v * 100).toFixed(1)}%
+                    </p>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      </div>
+
+      {/* Clinical Recommendation Card */}
+      {rec && (
+        <div className="border border-slate-200 bg-white p-5 rounded-2xl shadow-xs space-y-3">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="size-4.5 text-primary" />
+            <h3 className="text-sm font-bold text-slate-900">
+              Clinical Recommendation &amp; Referral Protocol
+            </h3>
+          </div>
+
+          <p className="text-sm text-slate-700 leading-relaxed">
+            {rec.action}
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl">
+              <p className="text-xs font-semibold text-slate-500 mb-0.5">
+                Recommended Specialist
+              </p>
+              <p className="text-sm font-bold text-slate-900">{rec.specialist}</p>
+            </div>
+
+            <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl">
+              <p className="text-xs font-semibold text-slate-500 mb-0.5">
+                Target Evaluation Timeframe
+              </p>
+              <p className={`text-sm font-bold ${risk === "high" ? "text-rose-600" : "text-slate-900"}`}>
+                {rec.timeframe}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <p className="text-xs text-slate-500 text-center">
+        Clinical Decision Support Prototype &mdash; not a replacement for clinical histopathological biopsy.
+      </p>
+    </div>
+  );
+}
+
+// ─── Clinician Tab Main Component ────────────────────────────────────────────
 function ClinicianTab({
   activeCase,
   selectedCase,
@@ -1262,294 +1865,173 @@ function ClinicianTab({
   onUploadClick: () => void;
   onClassify: (b64: string) => void;
 }) {
-  const needsRound = !roundResult;
-
   return (
     <div className="space-y-6">
-      <PageIntro
-        eyebrow="Clinician Console"
-        title="Analyze Lesion Photo"
-        detail="Upload a skin image or select a sample below. The image is preprocessed with the same pipeline as training (64×64, normalized), then classified by both the defended and undefended global models."
+      {/* Catchy Product Header & Value Hooks Strip (No essays!) */}
+      <ClinicianProductHeader
+        activeCase={activeCase}
+        selectedCase={selectedCase}
+        setSelectedCase={setSelectedCase}
       />
 
-      {needsRound && (
-        <div className="border border-warning/50 bg-warning/5 p-4 flex items-start gap-3">
-          <TriangleAlert className="size-5 text-warning mt-0.5 shrink-0" />
+      {/* Compact Lesion Legend Strip */}
+      <ClinicianLesionLegend />
+
+      {/* Patient Image Input & Sample Gallery (Front and Center!) */}
+      <div className="grid gap-4 lg:grid-cols-[1fr_1.6fr]">
+        <div className="border border-slate-200 bg-white p-5 rounded-2xl shadow-xs space-y-4">
           <div>
-            <p className="text-sm font-medium text-warning">No global models built yet</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Switch to the <strong>Operator</strong> tab and run a federated round first. The models
-              will be built automatically on the first prediction if needed, but results will be faster
-              if the round is already cached.
-            </p>
+            <h2 className="text-base font-bold text-slate-900">Patient Image Input</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Upload a dermoscopy photo or select a patient sample</p>
           </div>
-        </div>
-      )}
 
-      {/* Case selector */}
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-          Case:
-        </span>
-        {cases.map((c, idx) => (
-          <Button
-            key={c.num}
-            size="sm"
-            variant={idx === selectedCase ? "default" : "outline"}
-            onClick={() => setSelectedCase(idx)}
-          >
-            {c.label}
-          </Button>
-        ))}
-      </div>
-
-      {/* Upload + Gallery */}
-      <div className="grid gap-4 lg:grid-cols-[1fr_1.5fr]">
-        {/* Upload area */}
-        <CardShell eyebrow="Image input" title="Upload or select a sample">
           <button
             onClick={onUploadClick}
-            className="group flex w-full flex-col items-center justify-center border-2 border-dashed border-border bg-muted/30 py-8 transition hover:border-primary/50 hover:bg-primary/5"
+            className="group flex w-full flex-col items-center justify-center border-2 border-dashed border-slate-300 bg-slate-50/60 p-6 rounded-xl transition hover:border-primary hover:bg-primary/5"
           >
-            <Upload className="size-8 text-muted-foreground group-hover:text-primary transition" />
-            <p className="mt-3 text-sm text-muted-foreground group-hover:text-foreground">
-              Click to upload a skin lesion image
+            <div className="size-11 rounded-full bg-white border border-slate-200 shadow-xs flex items-center justify-center text-slate-500 group-hover:text-primary group-hover:border-primary/40 transition">
+              <Upload className="size-5" />
+            </div>
+            <p className="mt-3 text-sm font-bold text-slate-800 group-hover:text-primary transition">
+              Upload Dermoscopy Photo
             </p>
-            <p className="mt-1 font-mono text-[10px] text-muted-foreground">
-              JPEG, PNG · Any resolution (will be preprocessed to 64×64)
-            </p>
+            <p className="text-xs text-slate-500 mt-0.5">JPEG or PNG file</p>
           </button>
 
-          {/* Preview of selected/uploaded image */}
           {(uploadedImage || selectedSample) && (
-            <div className="mt-4 flex items-center gap-3 border border-border p-3">
-              <img
-                src={
-                  uploadedImage ||
-                  (selectedSample ? `data:image/jpeg;base64,${selectedSample.base64}` : "")
-                }
-                alt="Selected"
-                className="size-16 border border-border object-cover"
-              />
-              <div>
-                <p className="text-sm font-medium">
-                  {selectedSample
-                    ? selectedSample.label
-                    : "Uploaded image"}
-                </p>
-                {selectedSample?.has_ruler && (
-                  <span className="mt-1 inline-flex items-center gap-1 font-mono text-[10px] text-warning">
-                    <TriangleAlert className="size-3" /> Contains ruler artifact
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-        </CardShell>
-
-        {/* Sample gallery */}
-        <CardShell eyebrow="Sample gallery" title="Click a sample to classify">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {samples.map((sample) => (
-              <button
-                key={sample.id}
-                onClick={() => onSampleClick(sample)}
-                className={`group relative border p-2 text-left transition ${
-                  selectedSample?.id === sample.id
-                    ? "border-primary bg-primary/5 ring-1 ring-primary"
-                    : "border-border hover:border-primary/40 hover:bg-muted/30"
-                }`}
-              >
+            <div className="flex items-center justify-between border border-slate-200 bg-slate-50 p-3 rounded-xl">
+              <div className="flex items-center gap-3">
                 <img
-                  src={`data:image/jpeg;base64,${sample.base64}`}
-                  alt={sample.label}
-                  className="aspect-square w-full border border-border object-cover"
+                  src={
+                    uploadedImage ||
+                    (selectedSample ? `data:image/jpeg;base64,${selectedSample.base64}` : "")
+                  }
+                  alt="Selected"
+                  className="size-16 rounded-lg border border-slate-200 object-cover shadow-2xs"
                 />
-                <div className="mt-2">
-                  <p className="font-mono text-[10px] truncate">
-                    {sample.true_class}
-                    {sample.has_ruler && (
-                      <span className="ml-1 text-warning">+ ruler</span>
-                    )}
+                <div>
+                  <p className="text-sm font-bold text-slate-900">
+                    {selectedSample ? selectedSample.label : "Uploaded Patient Photo"}
                   </p>
+                  {selectedSample?.has_ruler ? (
+                    <span className="mt-1 inline-flex items-center gap-1 text-[11px] text-amber-800 font-bold bg-amber-100 px-2 py-0.5 rounded-full">
+                      <TriangleAlert className="size-3 text-amber-600" /> Physical Ruler Present
+                    </span>
+                  ) : (
+                    <span className="mt-1 inline-flex items-center gap-1 text-[11px] text-emerald-800 font-medium bg-emerald-100 px-2 py-0.5 rounded-full">
+                      <CheckCircle2 className="size-3 text-emerald-600" /> Clean Dermoscopy Image
+                    </span>
+                  )}
                 </div>
-                {sample.has_ruler && (
-                  <span className="absolute top-1 right-1 bg-warning/90 text-warning-foreground px-1 py-0.5 font-mono text-[8px] uppercase font-bold">
-                    Ruler
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-          {samples.length === 0 && (
-            <p className="py-8 text-center text-sm text-muted-foreground">
-              Loading sample images…
-            </p>
-          )}
-        </CardShell>
-      </div>
-
-      {/* Classification Results */}
-      {classifyRunning && (
-        <div className="flex items-center justify-center py-8">
-          <div className="flex flex-col items-center gap-3">
-            <div className="size-8 animate-spin border-2 border-primary border-t-transparent" />
-            <p className="font-mono text-sm text-muted-foreground">Classifying image…</p>
-          </div>
-        </div>
-      )}
-
-      {classifyResult && !classifyRunning && (
-        <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
-          {/* Disagreement banner */}
-          {classifyResult.disagree && (
-            <div className="mb-4 border-2 border-danger bg-danger/5 p-4 flex items-start gap-3">
-              <ShieldAlert className="size-5 text-danger mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm font-semibold text-danger">Models Disagree!</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  The defended and undefended models produce different predictions. This indicates the
-                  backdoor attack has influenced the undefended model's classification.
-                </p>
               </div>
+
+              <Button
+                size="sm"
+                onClick={() => {
+                  const b64 = uploadedImage || (selectedSample ? `data:image/jpeg;base64,${selectedSample.base64}` : null);
+                  if (b64) onClassify(b64);
+                }}
+                disabled={classifyRunning}
+                className="gap-1.5 font-semibold text-xs rounded-lg"
+              >
+                {classifyRunning ? "Analyzing..." : "Re-Analyze"}
+              </Button>
             </div>
           )}
-
-          {/* Side-by-side predictions */}
-          <div className="grid gap-4 md:grid-cols-2">
-            <PredictionCard
-              title="Undefended Model (FedAvg)"
-              subtitle="All clients including malicious"
-              prediction={classifyResult.undefended}
-              disagree={classifyResult.disagree}
-              isDefended={false}
-            />
-            <PredictionCard
-              title="Defended Model (Sybil-Filtered FLAME)"
-              subtitle="Trusted clients only"
-              prediction={classifyResult.defended}
-              disagree={classifyResult.disagree}
-              isDefended={true}
-            />
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-
-// ─── PREDICTION CARD ─────────────────────────────────────────────────────────
-
-function PredictionCard({
-  title,
-  subtitle,
-  prediction,
-  disagree,
-  isDefended,
-}: {
-  title: string;
-  subtitle: string;
-  prediction: Prediction;
-  disagree: boolean;
-  isDefended: boolean;
-}) {
-  const riskColor =
-    prediction.risk === "high"
-      ? "text-danger"
-      : prediction.risk === "medium"
-        ? "text-warning"
-        : "text-success";
-
-  const borderClass = disagree && !isDefended
-    ? "border-2 border-danger bg-danger/5"
-    : disagree && isDefended
-      ? "border-2 border-success bg-success/5"
-      : "border border-border bg-background";
-
-  return (
-    <div className={`p-5 shadow-paper ${borderClass}`}>
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            {isDefended ? "Defended" : "Undefended"}
-          </p>
-          <h3 className="mt-1 font-display text-base font-semibold">{title}</h3>
-          <p className="mt-0.5 font-mono text-[10px] text-muted-foreground">{subtitle}</p>
-        </div>
-        {isDefended ? (
-          <ShieldCheck className="size-5 text-success" />
-        ) : (
-          <TriangleAlert className="size-5 text-warning" />
-        )}
-      </div>
-
-      <div className="mt-4 space-y-3">
-        <div>
-          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            Prediction
-          </p>
-          <p className={`mt-1 font-display text-2xl font-bold ${riskColor}`}>
-            {prediction.label}
-          </p>
         </div>
 
-        <div className="flex items-center justify-between border-t border-border pt-3">
-          <div>
-            <p className="font-mono text-[10px] text-muted-foreground">Confidence</p>
-            <p className="font-display text-xl font-semibold">
-              {(prediction.confidence * 100).toFixed(1)}%
-            </p>
-          </div>
-          <div>
-            <p className="font-mono text-[10px] text-muted-foreground">Risk Level</p>
-            <span
-              className={`inline-flex border px-2 py-1 font-mono text-[10px] uppercase tracking-wider ${
-                prediction.risk === "high"
-                  ? "border-danger/40 bg-danger/10 text-danger"
-                  : prediction.risk === "medium"
-                    ? "border-warning/40 bg-warning/10 text-warning"
-                    : "border-success/40 bg-success/10 text-success"
-              }`}
-            >
-              {prediction.risk}
+        <div className="border border-slate-200 bg-white p-5 rounded-2xl shadow-xs space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-base font-bold text-slate-900">Patient Sample Library</h2>
+              <p className="text-xs text-slate-500 mt-0.5">Click any case to test instant diagnosis &amp; artifact defense</p>
+            </div>
+            <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
+              7 Test Patients
             </span>
           </div>
-        </div>
 
-        {/* Class probabilities */}
-        <div className="border-t border-border pt-3">
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            All class probabilities
-          </p>
-          <div className="space-y-1.5">
-            {Object.entries(prediction.all_probs)
-              .sort(([, a], [, b]) => b - a)
-              .map(([cls, prob]) => (
-                <div key={cls} className="flex items-center gap-2">
-                  <span className="w-12 font-mono text-[10px] text-muted-foreground">{cls}</span>
-                  <div className="h-2 flex-1 bg-muted">
-                    <div
-                      className={`h-full ${
-                        cls === prediction.predicted_class ? "bg-primary" : "bg-muted-foreground/30"
-                      }`}
-                      style={{ width: `${Math.min(prob * 100, 100)}%` }}
-                    />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {samples.map((sample) => {
+              const SNAMES: Record<string, string> = {
+                mel: "Melanoma",
+                nv: "Benign Mole",
+                bcc: "Basal Cell Ca.",
+                bkl: "Benign Keratosis",
+                akiec: "Actinic Keratosis",
+                df: "Dermatofibroma",
+                vasc: "Vascular Lesion",
+              };
+              const pn = SNAMES[sample.true_class] ?? sample.true_class.toUpperCase();
+              const isSelected = selectedSample?.id === sample.id;
+              return (
+                <button
+                  key={sample.id}
+                  onClick={() => onSampleClick(sample)}
+                  className={`group relative border p-2 text-left rounded-xl transition ${
+                    isSelected
+                      ? "border-primary bg-primary/5 ring-2 ring-primary shadow-sm"
+                      : "border-slate-200 hover:border-primary/50 hover:bg-slate-50"
+                  }`}
+                >
+                  <img
+                    src={`data:image/jpeg;base64,${sample.base64}`}
+                    alt={pn}
+                    className="aspect-square w-full rounded-lg border border-slate-200 object-cover"
+                  />
+                  <div className="mt-2">
+                    <p className="text-xs font-bold text-slate-900 truncate">{pn}</p>
+                    <p className="text-[10px] text-slate-500 font-semibold uppercase">{sample.true_class}</p>
                   </div>
-                  <span className="w-12 text-right font-mono text-[10px] text-muted-foreground">
-                    {(prob * 100).toFixed(1)}%
-                  </span>
-                </div>
-              ))}
+                  {sample.has_ruler && (
+                    <span className="absolute top-1.5 right-1.5 bg-amber-500 text-white px-1.5 py-0.5 rounded text-[9px] uppercase font-bold shadow-xs">
+                      Ruler
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
+          {samples.length === 0 && (
+            <p className="py-8 text-center text-sm text-slate-500">
+              Loading sample dermatoscopy library&hellip;
+            </p>
+          )}
         </div>
       </div>
+
+      {/* Loading Spinner */}
+      {classifyRunning && (
+        <div className="flex items-center justify-center py-12 border border-slate-200 bg-white rounded-2xl shadow-xs">
+          <div className="flex flex-col items-center gap-3">
+            <div className="size-9 animate-spin border-3 border-primary border-t-transparent rounded-full" />
+            <p className="text-sm text-slate-900 font-bold">Running trojanMole Diagnostic Assessment&hellip;</p>
+            <p className="text-xs text-slate-500">Evaluating against 10-hospital consortium model &amp; filtering artifacts</p>
+          </div>
+        </div>
+      )}
+
+      {/* Clinical Diagnostic Results */}
+      {classifyResult && !classifyRunning && (
+        <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-500 space-y-4">
+          {/* Artifact Alert (Collapsible when ruler present or models disagree) */}
+          {(classifyResult.disagree || selectedSample?.has_ruler) && (
+            <ClinicalArtifactAlert
+              result={classifyResult}
+              hasRuler={selectedSample?.has_ruler}
+            />
+          )}
+
+          {/* Two Model Tabs for Comparison ("Normal AI" vs "trojanMole AI") */}
+          <ClinicianModelComparisonTabs result={classifyResult} />
+        </div>
+      )}
     </div>
   );
 }
 
 
-// ─── UNDER THE HOOD ──────────────────────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ UNDER THE HOOD ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
 function UnderTheHood({
   selectedCase,
@@ -1588,14 +2070,14 @@ function UnderTheHood({
           <span className="font-mono text-[10px] text-muted-foreground">Model:</span>
           <Select value={selectedClient} onChange={(e) => setSelectedClient(e.target.value)} options={optionsList} />
           <span className="font-mono text-[10px] text-muted-foreground ml-4">Layer:</span>
-          <Select value={String(selectedLayer)} onChange={(e) => setSelectedLayer(Number(e.target.value))} options={["0 · Conv2D_1", "1 · Conv2D_2", "2 · Conv2D_3", "3 · Classifier"]} />
+          <Select value={String(selectedLayer)} onChange={(e) => setSelectedLayer(Number(e.target.value))} options={["0 ┬╖ Conv2D_1", "1 ┬╖ Conv2D_2", "2 ┬╖ Conv2D_3", "3 ┬╖ Classifier"]} />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
           {/* Histogram */}
           <div>
             <p className="mb-2 font-mono text-[10px] uppercase text-muted-foreground">
-              Weight Histogram · {selectedClient} / {currentLayerName}
+              Weight Histogram ┬╖ {selectedClient} / {currentLayerName}
             </p>
             <WeightChart weightStats={weightStats} selectedLayer={selectedLayer} />
           </div>
@@ -1604,10 +2086,10 @@ function UnderTheHood({
           <div className="grid grid-cols-2 gap-3">
             {(
               [
-                ["mean", weightStats?.layers?.[selectedLayer]?.mean ?? "—"],
-                ["std", weightStats?.layers?.[selectedLayer]?.std ?? "—"],
-                ["min", weightStats?.layers?.[selectedLayer]?.min ?? "—"],
-                ["max", weightStats?.layers?.[selectedLayer]?.max ?? "—"],
+                ["mean", weightStats?.layers?.[selectedLayer]?.mean ?? "ΓÇö"],
+                ["std", weightStats?.layers?.[selectedLayer]?.std ?? "ΓÇö"],
+                ["min", weightStats?.layers?.[selectedLayer]?.min ?? "ΓÇö"],
+                ["max", weightStats?.layers?.[selectedLayer]?.max ?? "ΓÇö"],
               ] as [string, any][]
             ).map(([label, value]) => (
               <div key={label} className="border border-border bg-muted/30 p-3">
@@ -1620,7 +2102,7 @@ function UnderTheHood({
       </CardShell>
 
       {/* Distance Matrix */}
-      <CardShell eyebrow="Distance Plots" title="Pairwise L2 Distance Matrix" note="Green = close to benign · red = high deviation">
+      <CardShell eyebrow="Distance Plots" title="Pairwise L2 Distance Matrix" note="Green = close to benign ┬╖ red = high deviation">
         <DistanceMatrix distanceMatrix={distanceMatrix} />
       </CardShell>
 
@@ -1656,7 +2138,7 @@ function UnderTheHood({
             </div>
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">Loading…</p>
+          <p className="text-sm text-muted-foreground">LoadingΓÇª</p>
         )}
       </CardShell>
     </div>
@@ -1664,14 +2146,14 @@ function UnderTheHood({
 }
 
 
-// ─── SHARED UI COMPONENTS ────────────────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ SHARED UI COMPONENTS ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
 function PageIntro({ eyebrow, title, detail }: { eyebrow: string; title: string; detail: string }) {
   return (
     <div className="mb-4 border-b border-border pb-5">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">{eyebrow}</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{eyebrow}</p>
       <h1 className="mt-2 max-w-4xl font-display text-2xl font-semibold tracking-tight md:text-3xl">{title}</h1>
-      <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">{detail}</p>
+      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{detail}</p>
     </div>
   );
 }
@@ -1696,14 +2178,14 @@ function MetricCard({
   return (
     <div className="border border-border bg-background p-4 shadow-paper">
       <div className="flex items-start justify-between">
-        <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{label}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
         <Icon className={`size-4 ${toneClass}`} strokeWidth={1.6} />
       </div>
       <p className={`mt-3 font-display text-3xl font-semibold tracking-tight ${toneClass}`}>
         {value}
         <span className="text-base font-normal text-muted-foreground">{suffix}</span>
       </p>
-      <p className="mt-2 text-xs text-muted-foreground">{note}</p>
+      <p className="mt-2 text-xs text-muted-foreground leading-relaxed">{note}</p>
     </div>
   );
 }
@@ -1722,9 +2204,9 @@ function CardShell({
   return (
     <section className="border border-border bg-background p-4 shadow-paper md:p-5">
       <div className="mb-4 border-b border-border pb-3">
-        <p className="font-mono text-[10px] uppercase tracking-[0.17em] text-primary">{eyebrow}</p>
-        <h2 className="mt-1 font-display text-base font-semibold">{title}</h2>
-        {note && <p className="mt-1 font-mono text-[10px] text-muted-foreground">{note}</p>}
+        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">{eyebrow}</p>
+        <h2 className="mt-1 font-display text-base font-semibold leading-snug">{title}</h2>
+        {note && <p className="mt-1 text-xs text-muted-foreground">{note}</p>}
       </div>
       {children}
     </section>
@@ -1734,12 +2216,12 @@ function CardShell({
 function Readout({ label, value, progress, tone }: { label: string; value: string; progress: number; tone: "success" | "danger" }) {
   return (
     <div>
-      <div className="mb-2 flex items-center justify-between">
-        <span className="font-mono text-[11px] text-muted-foreground">{label}</span>
-        <span className={`font-mono text-sm ${tone === "success" ? "text-success" : "text-danger"}`}>{value}</span>
+      <div className="mb-1.5 flex items-center justify-between">
+        <span className="text-xs font-medium text-muted-foreground">{label}</span>
+        <span className={`text-sm font-semibold tabular-nums ${tone === "success" ? "text-success" : "text-danger"}`}>{value}</span>
       </div>
-      <div className="h-2 bg-muted">
-        <div className={`h-full ${tone === "success" ? "bg-success" : "bg-danger"}`} style={{ width: `${Math.min(progress, 100)}%` }} />
+      <div className="h-2 rounded-full bg-muted">
+        <div className={`h-full rounded-full ${tone === "success" ? "bg-success" : "bg-danger"}`} style={{ width: `${Math.min(progress, 100)}%` }} />
       </div>
     </div>
   );
@@ -1748,12 +2230,12 @@ function Readout({ label, value, progress, tone }: { label: string; value: strin
 function StatusBadge({ tone, children }: { tone: "success" | "danger" | "warning"; children: React.ReactNode }) {
   return (
     <span
-      className={`inline-flex border px-2 py-1 font-mono text-[10px] uppercase tracking-wider ${
+      className={`inline-flex items-center gap-1.5 rounded px-3 py-1.5 text-xs font-semibold ${
         tone === "success"
-          ? "border-success/40 bg-success/10 text-success"
+          ? "bg-success/10 text-success border border-success/30"
           : tone === "danger"
-            ? "border-danger/40 bg-danger/10 text-danger"
-            : "border-warning/40 bg-warning/10 text-warning"
+            ? "bg-danger/10 text-danger border border-danger/30"
+            : "bg-warning/10 text-warning border border-warning/30"
       }`}
     >
       {children}
@@ -1781,7 +2263,7 @@ function Select({ value, onChange, options }: { value: string; onChange: (event:
 }
 
 
-// ─── CHART COMPONENTS (preserved from original) ──────────────────────────────
+// ΓöÇΓöÇΓöÇ CHART COMPONENTS (preserved from original) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
 function WeightChart({ weightStats, selectedLayer }: any) {
   let data = [

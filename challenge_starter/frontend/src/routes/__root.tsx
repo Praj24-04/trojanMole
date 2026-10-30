@@ -77,17 +77,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "DermaGuard — Shared skin-lesion AI, protected against hidden backdoors" },
+      { title: "trojanMole — Shared skin-lesion AI, protected against hidden backdoors" },
       {
         name: "description",
         content:
-          "DermaGuard protects federated skin-cancer AI from hidden backdoor attacks. Research prototype for IEEE GSC26 Challenge 1.",
+          "trojanMole protects federated skin-cancer AI from hidden backdoor attacks and measurement ruler artifacts.",
       },
       { name: "author", content: "Nisha Pragane, Prajakta Jadhav, Ayush Suryawanshi, Prathamesh Nawale" },
-      { property: "og:title", content: "DermaGuard — FL Backdoor Defense" },
+      { property: "og:title", content: "trojanMole — FL Backdoor Defense" },
       {
         property: "og:description",
-        content: "Shared skin-lesion AI, protected against hidden backdoors. IEEE GSC26 Challenge 1 — Team 004.",
+        content: "Shared skin-lesion AI, protected against hidden backdoors. Collaborative clinical intelligence.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
